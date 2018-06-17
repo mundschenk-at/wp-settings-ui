@@ -22,9 +22,9 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI\Tests;
+namespace Mundschenk\UI\Controls\Tests;
 
-use Mundschenk\UI\Select;
+use Mundschenk\UI\Controls\Select;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -34,10 +34,10 @@ use Brain\Monkey\Functions;
 use Mockery as m;
 
 /**
- * Mundschenk\UI\Select unit test.
+ * Mundschenk\UI\Controls\Select unit test.
  *
- * @coversDefaultClass \Mundschenk\UI\Select
- * @usesDefaultClass \Mundschenk\UI\Select
+ * @coversDefaultClass \Mundschenk\UI\Controls\Select
+ * @usesDefaultClass \Mundschenk\UI\Controls\Select
  *
  * @uses ::__construct
  * @uses \Mundschenk\UI\Control::__construct
@@ -54,7 +54,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Select
+	 * @var \Mundschenk\UI\Controls\Select
 	 */
 	protected $select;
 
@@ -97,7 +97,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::__construct
 	 *
-	 * @uses \Mundschenk\UI\Select::__construct
+	 * @uses \Mundschenk\UI\Controls\Select::__construct
 	 */
 	public function test_constructor() {
 		$select = m::mock( Select::class )

@@ -22,9 +22,10 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI\Tests;
+namespace Mundschenk\UI\Controls\Tests;
 
-use Mundschenk\UI\Input;
+use Mundschenk\UI\Controls\Checkbox_Input;
+use Mundschenk\UI\Controls\Input;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -34,15 +35,16 @@ use Brain\Monkey\Functions;
 use Mockery as m;
 
 /**
- * Mundschenk\UI\Input unit test.
+ * Mundschenk\UI\Controls\Checkbox_Input unit test.
  *
- * @coversDefaultClass \Mundschenk\UI\Input
- * @usesDefaultClass \Mundschenk\UI\Input
+ * @coversDefaultClass \Mundschenk\UI\Controls\Checkbox_Input
+ * @usesDefaultClass \Mundschenk\UI\Controls\Checkbox_Input
  *
  * @uses ::__construct
+ * @uses \Mundschenk\UI\Controls\Input::__construct
  * @uses \Mundschenk\UI\Control::__construct
  */
-class Input_Test extends \Mundschenk\UI\Tests\TestCase {
+class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
 	/**
 	 * Test fixture.
@@ -54,7 +56,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Input
+	 * @var \Mundschenk\UI\Controls\Checkbox_Input
 	 */
 	protected $input;
 
@@ -71,11 +73,24 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
 
-		$this->input = m::mock( Input::class )
+		$this->input = m::mock( Checkbox_Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'input_type', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ] );
+		$args = [
+			'tab_id'      => 'my_tab_id',
+			'section'     => 'my_section',
+			'default'     => 'my_default',
+			'short'       => 'my_short',
+			'label'       => 'my_label',
+			'help_text'   => 'my_help_text',
+			'inline_help' => false,
+			'attributes'  => [ 'foo' => 'bar' ],
+		];
+
+		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
+
+		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Checkbox_Input::class );
 	}
 
 	/**
@@ -83,16 +98,29 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::__construct
 	 *
-	 * @uses \Mundschenk\UI\Input::__construct
+	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
 	public function test_constructor() {
-		$input = m::mock( Input::class )
+		$input = m::mock( Checkbox_Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'input_type', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ] );
+		$args = [
+			'tab_id'      => 'my_tab_id',
+			'section'     => 'my_section',
+			'default'     => 'my_default',
+			'short'       => 'my_short',
+			'label'       => 'my_label',
+			'help_text'   => 'my_help_text',
+			'inline_help' => false,
+			'attributes'  => [ 'foo' => 'bar' ],
+		];
 
-		$this->assertSame( 'input_type', $this->getValue( $input, 'input_type' ) );
+		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
+
+		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Checkbox_Input::class );
+
+		$this->assertSame( 'checkbox', $this->getValue( $input, 'input_type', Input::class ) );
 	}
 
 	/**
@@ -101,24 +129,8 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_value_markup
 	 */
 	public function test_get_value_markup() {
-		Functions\expect( 'esc_attr' )->once()->with( 'my_value' )->andReturn( 'my_escaped_value' );
+		Functions\expect( 'checked' )->once()->with( 'my_value', true, false )->andReturn( 'checked' );
 
-		$this->assertSame( 'value="my_escaped_value" ', $this->invokeMethod( $this->input, 'get_value_markup', [ 'my_value' ] ) );
-		$this->assertSame( '', $this->invokeMethod( $this->input, 'get_value_markup', [ false ] ) );
-	}
-
-	/**
-	 * Tests get_element_markup.
-	 *
-	 * @covers ::get_element_markup
-	 */
-	public function test_get_element_markup() {
-		Functions\expect( 'esc_attr' )->once()->with( 'input_type' )->andReturn( 'escaped_input_type' );
-
-		$this->input->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
-		$this->input->shouldReceive( 'get_value_markup' )->once()->with( 'value' )->andReturn( 'VALUE' );
-		$this->input->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'ID_AND_CLASS' );
-
-		$this->assertSame( '<input type="escaped_input_type" ID_AND_CLASS VALUE/>', $this->invokeMethod( $this->input, 'get_element_markup' ) );
+		$this->assertSame( 'value="1" checked', $this->invokeMethod( $this->input, 'get_value_markup', [ 'my_value' ] ) );
 	}
 }

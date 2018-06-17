@@ -24,14 +24,16 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI;
+namespace Mundschenk\UI\Controls;
+
+use Mundschenk\UI\Control;
 
 use Mundschenk\Data_Storage\Options;
 
 /**
  * HTML <input> element.
  */
-class Number_Input extends Input {
+class Hidden_Input extends Input {
 
 	/**
 	 * Create a new input control object.
@@ -57,18 +59,6 @@ class Number_Input extends Input {
 	public function __construct( Options $options, $options_key, $id, array $args ) {
 		$args = $this->prepare_args( $args, [ 'tab_id', 'default' ] );
 
-		parent::__construct( $options, $options_key, 'number', $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], $args['inline_help'], $args['attributes'] );
-	}
-
-	/**
-	 * Render the value markup for this input.
-	 *
-	 * @param mixed $value The input value.
-	 *
-	 * @return string
-	 */
-	protected function get_value_markup( $value ) {
-		// Include 0 values.
-		return 'value="' . \esc_attr( $value ) . '" ';
+		parent::__construct( $options, $options_key, 'hidden', $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], null, null, false, $args['attributes'] );
 	}
 }

@@ -22,10 +22,10 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI\Tests;
+namespace Mundschenk\UI\Controls\Tests;
 
-use Mundschenk\UI\Submit_Input;
-use Mundschenk\UI\Input;
+use Mundschenk\UI\Controls\Submit_Input;
+use Mundschenk\UI\Controls\Input;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -35,13 +35,13 @@ use Brain\Monkey\Functions;
 use Mockery as m;
 
 /**
- * Mundschenk\UI\Submit_Input unit test.
+ * Mundschenk\UI\Controls\Submit_Input unit test.
  *
- * @coversDefaultClass \Mundschenk\UI\Submit_Input
- * @usesDefaultClass \Mundschenk\UI\Submit_Input
+ * @coversDefaultClass \Mundschenk\UI\Controls\Submit_Input
+ * @usesDefaultClass \Mundschenk\UI\Controls\Submit_Input
  *
  * @uses ::__construct
- * @uses \Mundschenk\UI\Input::__construct
+ * @uses \Mundschenk\UI\Controls\Input::__construct
  * @uses \Mundschenk\UI\Control::__construct
  */
 class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
@@ -56,7 +56,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Submit_Input
+	 * @var \Mundschenk\UI\Controls\Submit_Input
 	 */
 	protected $input;
 
@@ -99,7 +99,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::__construct
 	 *
-	 * @uses \Mundschenk\UI\Input::__construct
+	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
 	public function test_constructor() {
 		$input = m::mock( Submit_Input::class )

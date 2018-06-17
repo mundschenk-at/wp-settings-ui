@@ -22,10 +22,9 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI\Tests;
+namespace Mundschenk\UI\Controls\Tests;
 
-use Mundschenk\UI\Textarea;
-use Mundschenk\UI\Input;
+use Mundschenk\UI\Controls\Input;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -35,15 +34,15 @@ use Brain\Monkey\Functions;
 use Mockery as m;
 
 /**
- * Mundschenk\UI\Textarea unit test.
+ * Mundschenk\UI\Input unit test.
  *
- * @coversDefaultClass \Mundschenk\UI\Textarea
- * @usesDefaultClass \Mundschenk\UI\Textarea
+ * @coversDefaultClass \Mundschenk\UI\Controls\Input
+ * @usesDefaultClass \Mundschenk\UI\Controls\Input
  *
  * @uses ::__construct
  * @uses \Mundschenk\UI\Control::__construct
  */
-class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
+class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
 	/**
 	 * Test fixture.
@@ -55,9 +54,9 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Textarea
+	 * @var \Mundschenk\UI\Controls\Input
 	 */
-	protected $textarea;
+	protected $input;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -72,24 +71,11 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
 
-		$this->textarea = m::mock( Textarea::class )
+		$this->input = m::mock( Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$args = [
-			'tab_id'      => 'my_tab_id',
-			'section'     => 'my_section',
-			'default'     => 'my_default',
-			'short'       => 'my_short',
-			'label'       => 'my_label',
-			'help_text'   => 'my_help_text',
-			'inline_help' => false,
-			'attributes'  => [ 'foo' => 'bar' ],
-		];
-
-		$this->textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
-
-		$this->invokeMethod( $this->textarea, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Textarea::class );
+		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'input_type', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ] );
 	}
 
 	/**
@@ -97,29 +83,28 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::__construct
 	 *
-	 * @uses \Mundschenk\UI\Input::__construct
+	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
 	public function test_constructor() {
-		$textarea = m::mock( Textarea::class )
+		$input = m::mock( Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$args = [
-			'tab_id'      => 'my_tab_id',
-			'section'     => 'my_section',
-			'default'     => 'my_default',
-			'short'       => 'my_short',
-			'label'       => 'my_label',
-			'help_text'   => 'my_help_text',
-			'inline_help' => false,
-			'attributes'  => [ 'foo' => 'bar' ],
-		];
+		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'input_type', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ] );
 
-		$textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
+		$this->assertSame( 'input_type', $this->getValue( $input, 'input_type' ) );
+	}
 
-		$this->invokeMethod( $textarea, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Textarea::class );
+	/**
+	 * Tests get_value_markup.
+	 *
+	 * @covers ::get_value_markup
+	 */
+	public function test_get_value_markup() {
+		Functions\expect( 'esc_attr' )->once()->with( 'my_value' )->andReturn( 'my_escaped_value' );
 
-		$this->assertInstanceOf( Textarea::class, $textarea );
+		$this->assertSame( 'value="my_escaped_value" ', $this->invokeMethod( $this->input, 'get_value_markup', [ 'my_value' ] ) );
+		$this->assertSame( '', $this->invokeMethod( $this->input, 'get_value_markup', [ false ] ) );
 	}
 
 	/**
@@ -128,10 +113,12 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_element_markup
 	 */
 	public function test_get_element_markup() {
-		Functions\expect( 'esc_textarea' )->once()->with( 'value' )->andReturn( 'escaped_value' );
-		$this->textarea->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
-		$this->textarea->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'id="foo"' );
+		Functions\expect( 'esc_attr' )->once()->with( 'input_type' )->andReturn( 'escaped_input_type' );
 
-		$this->assertSame( '<textarea class="large-text" id="foo">escaped_value</textarea>', $this->invokeMethod( $this->textarea, 'get_element_markup' ) );
+		$this->input->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
+		$this->input->shouldReceive( 'get_value_markup' )->once()->with( 'value' )->andReturn( 'VALUE' );
+		$this->input->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'ID_AND_CLASS' );
+
+		$this->assertSame( '<input type="escaped_input_type" ID_AND_CLASS VALUE/>', $this->invokeMethod( $this->input, 'get_element_markup' ) );
 	}
 }

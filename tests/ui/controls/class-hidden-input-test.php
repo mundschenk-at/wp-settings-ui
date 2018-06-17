@@ -22,10 +22,10 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI\Tests;
+namespace Mundschenk\UI\Controls\Tests;
 
-use Mundschenk\UI\Number_Input;
-use Mundschenk\UI\Input;
+use Mundschenk\UI\Controls\Hidden_Input;
+use Mundschenk\UI\Controls\Input;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -35,16 +35,12 @@ use Brain\Monkey\Functions;
 use Mockery as m;
 
 /**
- * Mundschenk\UI\Number_Input unit test.
+ * Mundschenk\UI\Controls\Hidden_Input unit test.
  *
- * @coversDefaultClass \Mundschenk\UI\Number_Input
- * @usesDefaultClass \Mundschenk\UI\Number_Input
- *
- * @uses ::__construct
- * @uses \Mundschenk\UI\Input::__construct
- * @uses \Mundschenk\UI\Control::__construct
+ * @coversDefaultClass \Mundschenk\UI\Controls\Hidden_Input
+ * @usesDefaultClass \Mundschenk\UI\Controls\Hidden_Input
  */
-class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
+class Hidden_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
 	/**
 	 * Test fixture.
@@ -56,7 +52,7 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Number_Input
+	 * @var \Mundschenk\UI\Controls\Hidden_Input
 	 */
 	protected $input;
 
@@ -72,25 +68,6 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
-
-		$this->input = m::mock( Number_Input::class )
-			->shouldAllowMockingProtectedMethods()
-			->makePartial();
-
-		$args = [
-			'tab_id'      => 'my_tab_id',
-			'section'     => 'my_section',
-			'default'     => 'my_default',
-			'short'       => 'my_short',
-			'label'       => 'my_label',
-			'help_text'   => 'my_help_text',
-			'inline_help' => false,
-			'attributes'  => [ 'foo' => 'bar' ],
-		];
-
-		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
-
-		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Number_Input::class );
 	}
 
 	/**
@@ -98,10 +75,11 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::__construct
 	 *
-	 * @uses \Mundschenk\UI\Input::__construct
+	 * @uses \Mundschenk\UI\Controls\Input::__construct
+	 * @uses \Mundschenk\UI\Control::__construct
 	 */
 	public function test_constructor() {
-		$input = m::mock( Number_Input::class )
+		$input = m::mock( Hidden_Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
@@ -118,19 +96,8 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
 
-		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Number_Input::class );
+		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Hidden_Input::class );
 
-		$this->assertSame( 'number', $this->getValue( $input, 'input_type', Input::class ) );
-	}
-
-	/**
-	 * Tests get_value_markup.
-	 *
-	 * @covers ::get_value_markup
-	 */
-	public function test_get_value_markup() {
-		Functions\expect( 'esc_attr' )->once()->with( 0 )->andReturn( 0 );
-
-		$this->assertSame( 'value="0" ', $this->invokeMethod( $this->input, 'get_value_markup', [ 0 ] ) );
+		$this->assertSame( 'hidden', $this->getValue( $input, 'input_type', Input::class ) );
 	}
 }

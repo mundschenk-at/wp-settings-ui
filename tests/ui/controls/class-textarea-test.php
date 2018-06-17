@@ -22,10 +22,10 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI\Tests;
+namespace Mundschenk\UI\Controls\Tests;
 
-use Mundschenk\UI\Checkbox_Input;
-use Mundschenk\UI\Input;
+use Mundschenk\UI\Controls\Textarea;
+use Mundschenk\UI\Controls\Input;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -35,16 +35,15 @@ use Brain\Monkey\Functions;
 use Mockery as m;
 
 /**
- * Mundschenk\UI\Checkbox_Input unit test.
+ * Mundschenk\UI\Controls\Textarea unit test.
  *
- * @coversDefaultClass \Mundschenk\UI\Checkbox_Input
- * @usesDefaultClass \Mundschenk\UI\Checkbox_Input
+ * @coversDefaultClass \Mundschenk\UI\Controls\Textarea
+ * @usesDefaultClass \Mundschenk\UI\Controls\Textarea
  *
  * @uses ::__construct
- * @uses \Mundschenk\UI\Input::__construct
  * @uses \Mundschenk\UI\Control::__construct
  */
-class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
+class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 
 	/**
 	 * Test fixture.
@@ -56,9 +55,9 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Checkbox_Input
+	 * @var \Mundschenk\UI\Controls\Textarea
 	 */
-	protected $input;
+	protected $textarea;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -73,7 +72,7 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
 
-		$this->input = m::mock( Checkbox_Input::class )
+		$this->textarea = m::mock( Textarea::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
@@ -88,9 +87,9 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'attributes'  => [ 'foo' => 'bar' ],
 		];
 
-		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
+		$this->textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
 
-		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Checkbox_Input::class );
+		$this->invokeMethod( $this->textarea, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Textarea::class );
 	}
 
 	/**
@@ -98,10 +97,10 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::__construct
 	 *
-	 * @uses \Mundschenk\UI\Input::__construct
+	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
 	public function test_constructor() {
-		$input = m::mock( Checkbox_Input::class )
+		$textarea = m::mock( Textarea::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
@@ -116,21 +115,23 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'attributes'  => [ 'foo' => 'bar' ],
 		];
 
-		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
+		$textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
 
-		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Checkbox_Input::class );
+		$this->invokeMethod( $textarea, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Textarea::class );
 
-		$this->assertSame( 'checkbox', $this->getValue( $input, 'input_type', Input::class ) );
+		$this->assertInstanceOf( Textarea::class, $textarea );
 	}
 
 	/**
-	 * Tests get_value_markup.
+	 * Tests get_element_markup.
 	 *
-	 * @covers ::get_value_markup
+	 * @covers ::get_element_markup
 	 */
-	public function test_get_value_markup() {
-		Functions\expect( 'checked' )->once()->with( 'my_value', true, false )->andReturn( 'checked' );
+	public function test_get_element_markup() {
+		Functions\expect( 'esc_textarea' )->once()->with( 'value' )->andReturn( 'escaped_value' );
+		$this->textarea->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
+		$this->textarea->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'id="foo"' );
 
-		$this->assertSame( 'value="1" checked', $this->invokeMethod( $this->input, 'get_value_markup', [ 'my_value' ] ) );
+		$this->assertSame( '<textarea class="large-text" id="foo">escaped_value</textarea>', $this->invokeMethod( $this->textarea, 'get_element_markup' ) );
 	}
 }

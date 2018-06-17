@@ -24,14 +24,16 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace Mundschenk\UI;
+namespace Mundschenk\UI\Controls;
+
+use Mundschenk\UI\Control;
 
 use Mundschenk\Data_Storage\Options;
 
 /**
  * HTML <input> element.
  */
-class Hidden_Input extends Input {
+class Checkbox_Input extends Input {
 
 	/**
 	 * Create a new input control object.
@@ -57,6 +59,17 @@ class Hidden_Input extends Input {
 	public function __construct( Options $options, $options_key, $id, array $args ) {
 		$args = $this->prepare_args( $args, [ 'tab_id', 'default' ] );
 
-		parent::__construct( $options, $options_key, 'hidden', $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], null, null, false, $args['attributes'] );
+		parent::__construct( $options, $options_key, 'checkbox', $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], $args['inline_help'], $args['attributes'] );
+	}
+
+	/**
+	 * Retrieves the value markup for this input.
+	 *
+	 * @param mixed $value The input value.
+	 *
+	 * @return string
+	 */
+	protected function get_value_markup( $value ) {
+		return 'value="1" ' . \checked( $value, true, false );
 	}
 }
