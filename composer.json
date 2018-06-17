@@ -1,0 +1,53 @@
+{
+    "name": "mundschenk-at/wp-settings-ui",
+    "description": "An object oriented interface to the WordPress Settings API",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Peter Putzer",
+            "email": "github@mundschenk.at",
+            "homepage": "https://code.mundschenk.at",
+            "role": "Developer"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "dev-master",
+        "wp-coding-standards/wpcs": "^0.14.0",
+        "wimg/php-compatibility": "^8.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4",
+        "phpunit/phpunit": "5.*||6.*||7.*",
+        "mikey179/vfsStream": "~1",
+        "brain/monkey": "^2.0@dev"
+    },
+
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "autoload-dev": {
+        "classmap": ["tests/"]
+    },
+
+    "config": {
+        "classmap-authoritative": false
+    },
+
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+
+    "scripts": {
+        "test": [
+          "vendor/bin/phpunit --testsuite WPSettingsUI"
+        ],
+        "coverage": [
+          "@composer test -- --coverage-html tests/coverage"
+        ],
+        "phpcs": [
+          "vendor/bin/phpcs -p -s src/ tests/ --extensions=php"
+        ]
+    }
+}
