@@ -366,4 +366,50 @@ abstract class Control {
 			$control->grouped_with    = $this;
 		}
 	}
+
+
+	/**
+	 * Initialize controls for a plugin settings page.
+	 *
+	 * @param array   $defaults {
+	 *        An array of control definitions, indexed by control ID.
+	 *
+	 *        @type array $control_id {
+	 *              A control definition. There may be additional parameters that are passed to the control constructor.
+	 *
+	 *              @type string $ui           The UI object class name.
+	 *              @type string $grouped_with The control ID of the control this one should be grouped with.
+	 *        }
+	 * }
+	 * @param Options $options     The options handler.
+	 * @param string  $options_key The options key.
+	 *
+	 * @return array {
+	 *         An array of control objects, indexed by control ID.
+	 *
+	 *         @type Control $id A control object.
+	 * }
+	 */
+	public static function initialize( array $defaults, Options $options, $options_key ) {
+
+		// Create controls from default configuration.
+		$controls = [];
+		$groups   = [];
+		foreach ( $defaults as $control_id => $control_info ) {
+			$controls[ $control_id ] = new $control_info['ui']( $options, $options_key, $control_id, $control_info );
+
+			if ( ! empty( $control_info['grouped_with'] ) ) {
+				$groups[ $control_info['grouped_with'] ][] = $control_id;
+			}
+		}
+
+		// Group controls.
+		foreach ( $groups as $group => $control_ids ) {
+			foreach ( $control_ids as $control_id ) {
+				$controls[ $group ]->add_grouped_control( $controls[ $control_id ] );
+			}
+		}
+
+		return $controls;
+	}
 }
