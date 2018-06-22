@@ -69,12 +69,8 @@ class Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		// Set up virtual filesystem.
 		vfsStream::setup( 'root', null, [
 			'plugin' => [
-				'admin' => [
-					'partials' => [
-						'ui' => [
-							'control.php' => 'CONTROL',
-						],
-					],
+				'partials' => [
+					'control.php' => 'CONTROL',
 				],
 			],
 		] );
@@ -114,7 +110,7 @@ class Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->assertAttributeSame( 'help_text', 'help_text', $control );
 		$this->assertAttributeSame( true, 'inline_help', $control );
 		$this->assertAttributeSame( [ 'foo' => 'bar' ], 'attributes', $control );
-		$this->assertAttributeInternalType( 'string', 'plugin_path', $control );
+		$this->assertAttributeInternalType( 'string', 'base_path', $control );
 	}
 
 	/**
@@ -325,7 +321,7 @@ class Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::render
 	 */
 	public function test_render() {
-		$this->setValue( $this->control, 'plugin_path', 'plugin' );
+		$this->setValue( $this->control, 'base_path', 'plugin' );
 
 		$this->expectOutputString( 'CONTROL' );
 

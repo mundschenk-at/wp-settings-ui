@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2014-2017 Peter Putzer.
+ *  Copyright 2014-2018 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -126,11 +126,11 @@ abstract class Control {
 	protected $options;
 
 	/**
-	 * The root path of the plugin.
+	 * The base path for includes.
 	 *
 	 * @var string
 	 */
-	protected $plugin_path;
+	protected $base_path;
 
 	/**
 	 * The options key.
@@ -189,7 +189,7 @@ abstract class Control {
 		$this->inline_help = $inline_help;
 		$this->default     = $default;
 		$this->attributes  = $attributes;
-		$this->plugin_path = dirname( dirname( dirname( __DIR__ ) ) );
+		$this->base_path   = dirname( dirname( __DIR__ ) );
 	}
 
 	/**
@@ -258,7 +258,7 @@ abstract class Control {
 	 * Render the HTML representation of the control.
 	 */
 	public function render() {
-		require $this->plugin_path . '/admin/partials/ui/control.php';
+		require $this->base_path . '/partials/control.php';
 	}
 
 	/**
