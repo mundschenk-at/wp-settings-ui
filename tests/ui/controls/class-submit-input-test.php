@@ -67,6 +67,8 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	protected function setUp() { // @codingStandardsIgnoreLine
 		parent::setUp();
 
+		Functions\when( 'wp_parse_args' )->alias( 'array_merge' );
+
 		// Mock Mundschenk\Data_Storage\Options instance.
 		$this->options = m::mock( Options::class )
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
@@ -89,7 +91,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'button_class' => 'my_class',
 		];
 
-		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default', 'button_class' ] )->andReturn( $args );
+		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'button_class' ] )->andReturn( $args );
 
 		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Submit_Input::class );
 	}
@@ -118,7 +120,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'button_class' => 'my_class',
 		];
 
-		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default', 'button_class' ] )->andReturn( $args );
+		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'button_class' ] )->andReturn( $args );
 
 		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Submit_Input::class );
 

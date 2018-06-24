@@ -46,23 +46,28 @@ abstract class Input extends Abstract_Control {
 	/**
 	 * Create a new input control object.
 	 *
-	 * @param Options     $options      Options API handler.
-	 * @param string      $options_key  Database key for the options array.
-	 * @param string      $input_type   HTML input type ('checkbox' etc.). Required.
-	 * @param string      $id           Control ID (equivalent to option name). Required.
-	 * @param string      $tab_id       Tab ID. Required.
-	 * @param string      $section      Section ID. Required.
-	 * @param string|int  $default      The default value. Required, but may be an empty string.
-	 * @param string|null $short        Optional. Short label. Default null.
-	 * @param string|null $label        Optional. Label content with the position of the control marked as %1$s. Default null.
-	 * @param string|null $help_text    Optional. Help text. Default null.
-	 * @param bool        $inline_help  Optional. Display help inline. Default false.
-	 * @param array       $attributes   Optional. Default [].
+	 * @param Options $options      Options API handler.
+	 * @param string  $options_key  Database key for the options array.
+	 * @param string  $id           Control ID (equivalent to option name). Required.
+	 * @param array   $args {
+	 *    Optional and required arguments.
+	 *
+	 *    @type string      $input_type   HTML input type ('checkbox' etc.). Required.
+	 *    @type string      $tab_id       Tab ID. Required.
+	 *    @type string      $section      Section ID. Required.
+	 *    @type string|int  $default      The default value. Required, but may be an empty string.
+	 *    @type string|null $short        Optional. Short label. Default null.
+	 *    @type string|null $label        Optional. Label content with the position of the control marked as %1$s. Default null.
+	 *    @type string|null $help_text    Optional. Help text. Default null.
+	 *    @type bool        $inline_help  Optional. Display help inline. Default false.
+	 *    @type array       $attributes   Optional. Default [],
+	 * }
 	 */
-	protected function __construct( Options $options, $options_key, $input_type, $id, $tab_id, $section, $default, $short, $label = null, $help_text = null, $inline_help = false, $attributes = [] ) {
-		parent::__construct( $options, $options_key, $id, $tab_id, $section, $default, $short, $label, $help_text, $inline_help, $attributes );
+	protected function __construct( Options $options, $options_key, $id, array $args ) {
+		$args             = $this->prepare_args( $args, [ 'input_type', 'tab_id', 'section', 'default' ] );
+		$this->input_type = $args['input_type'];
 
-		$this->input_type = $input_type;
+		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], $args['inline_help'], $args['attributes'] );
 	}
 
 	/**

@@ -63,6 +63,8 @@ class Hidden_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	protected function setUp() { // @codingStandardsIgnoreLine
 		parent::setUp();
 
+		Functions\when( 'wp_parse_args' )->alias( 'array_merge' );
+
 		// Mock Mundschenk\Data_Storage\Options instance.
 		$this->options = m::mock( Options::class )
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
@@ -93,8 +95,6 @@ class Hidden_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'inline_help' => false,
 			'attributes'  => [ 'foo' => 'bar' ],
 		];
-
-		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
 
 		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Hidden_Input::class );
 

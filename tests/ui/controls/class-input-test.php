@@ -75,7 +75,21 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'input_type', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ] );
+		$args = [
+			'input_type'  => 'my_input_type',
+			'tab_id'      => 'my_tab_id',
+			'section'     => 'my_section',
+			'default'     => 'my_default',
+			'short'       => 'my_short',
+			'label'       => 'my_label',
+			'help_text'   => 'my_help_text',
+			'inline_help' => false,
+			'attributes'  => [ 'foo' => 'bar' ],
+		];
+
+		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );
+
+		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'id', $args ] );
 	}
 
 	/**
@@ -90,9 +104,23 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'input_type', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ] );
+		$args = [
+			'input_type'  => 'my_input_type',
+			'tab_id'      => 'my_tab_id',
+			'section'     => 'my_section',
+			'default'     => 'my_default',
+			'short'       => 'my_short',
+			'label'       => 'my_label',
+			'help_text'   => 'my_help_text',
+			'inline_help' => false,
+			'attributes'  => [ 'foo' => 'bar' ],
+		];
 
-		$this->assertSame( 'input_type', $this->getValue( $input, 'input_type' ) );
+		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );
+
+		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ] );
+
+		$this->assertSame( 'my_input_type', $this->getValue( $input, 'input_type' ) );
 	}
 
 	/**
@@ -113,7 +141,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_element_markup
 	 */
 	public function test_get_element_markup() {
-		Functions\expect( 'esc_attr' )->once()->with( 'input_type' )->andReturn( 'escaped_input_type' );
+		Functions\expect( 'esc_attr' )->once()->with( 'my_input_type' )->andReturn( 'escaped_input_type' );
 
 		$this->input->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
 		$this->input->shouldReceive( 'get_value_markup' )->once()->with( 'value' )->andReturn( 'VALUE' );

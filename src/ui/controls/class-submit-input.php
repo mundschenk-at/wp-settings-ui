@@ -55,20 +55,26 @@ class Submit_Input extends Input {
 	 *    @type string|int  $default      The default value. Required, but may be an empty string.
 	 *    @type string      $button_class Required.
 	 *    @type string|null $short        Optional. Short label. Default null.
-	 *    @type string|null $label        Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text    Optional. Help text. Default null.
-	 *    @type bool        $inline_help  Optional. Display help inline. Default false.
 	 *    @type array       $attributes   Optional. Default [],
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
 	 */
 	public function __construct( Options $options, $options_key, $id, array $args ) {
-		$args = $this->prepare_args( $args, [ 'tab_id', 'default', 'button_class' ] );
+		// Ensure that there is a button class argument.
+		$args = $this->prepare_args( $args, [ 'button_class' ] );
 
-		parent::__construct( $options, $options_key, 'submit', $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], null, null, false, $args['attributes'] );
+		// Force these addtional arguments.
+		$args['input_type']  = 'submit';
+		$args['label']       = null;
+		$args['help_text']   = null;
+		$args['inline_help'] = false;
 
+		// Store button class attribute.
 		$this->button_class = $args['button_class'];
+
+		// Call parent.
+		parent::__construct( $options, $options_key, $id, $args );
 	}
 
 	/**
