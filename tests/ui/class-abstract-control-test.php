@@ -24,7 +24,7 @@
 
 namespace Mundschenk\UI\Tests;
 
-use Mundschenk\UI\Control;
+use Mundschenk\UI\Abstract_Control;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -36,14 +36,14 @@ use org\bovigo\vfs\vfsStream;
 use Mockery as m;
 
 /**
- * Mundschenk\UI\Control unit test.
+ * Mundschenk\UI\Abstract_Control unit test.
  *
- * @coversDefaultClass \Mundschenk\UI\Control
- * @usesDefaultClass \Mundschenk\UI\Control
+ * @coversDefaultClass \Mundschenk\UI\Abstract_Control
+ * @usesDefaultClass \Mundschenk\UI\Abstract_Control
  *
  * @uses ::__construct
  */
-class Control_Test extends \Mundschenk\UI\Tests\TestCase {
+class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 
 	/**
 	 * Test fixture.
@@ -55,7 +55,7 @@ class Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Control
+	 * @var \Mundschenk\UI\Abstract_Control
 	 */
 	protected $control;
 
@@ -82,11 +82,11 @@ class Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
 
-		$this->control = m::mock( Control::class )
+		$this->control = m::mock( Abstract_Control::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $this->control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ], Control::class );
+		$this->invokeMethod( $this->control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ], Abstract_Control::class );
 	}
 
 	/**
@@ -95,11 +95,11 @@ class Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::__construct
 	 */
 	public function test_constructor() {
-		$control = m::mock( Control::class )
+		$control = m::mock( Abstract_Control::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [ 'foo' => 'bar' ] ], Control::class );
+		$this->invokeMethod( $control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [ 'foo' => 'bar' ] ], Abstract_Control::class );
 
 		$this->assertAttributeSame( 'id', 'id', $control );
 		$this->assertAttributeSame( 'tab_id', 'tab_id', $control );
@@ -292,7 +292,7 @@ class Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::add_grouped_control
 	 */
 	public function test_add_grouped_control() {
-		$second_control = m::mock( Control::class )
+		$second_control = m::mock( Abstract_Control::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 

@@ -27,13 +27,14 @@
 namespace Mundschenk\UI\Controls;
 
 use Mundschenk\UI\Control;
+use Mundschenk\UI\Abstract_Control;
 
 use Mundschenk\Data_Storage\Options;
 
 /**
  * HTML <textarea> element.
  */
-class Textarea extends Control {
+class Textarea extends Abstract_Control {
 
 	/**
 	 * Create a new textarea control object.
@@ -70,5 +71,33 @@ class Textarea extends Control {
 		$value = \esc_textarea( $this->get_value() );
 
 		return "<textarea class=\"large-text\" {$this->get_id_and_class_markup()}>{$value}</textarea>";
+	}
+
+	/**
+	 * Creates a new textarea control
+	 *
+	 * @param Options $options      Options API handler.
+	 * @param string  $options_key  Database key for the options array.
+	 * @param string  $id           Control ID (equivalent to option name). Required.
+	 * @param array   $args {
+	 *    Optional and required arguments.
+	 *
+	 *    @type string      $tab_id        Tab ID. Required.
+	 *    @type string      $section       Section ID. Required.
+	 *    @type string|int  $default       The default value. Required, but may be an empty string.
+	 *    @type array       $option_values The allowed values. Required.
+	 *    @type string|null $short         Optional. Short label. Default null.
+	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
+	 *    @type string|null $help_text     Optional. Help text. Default null.
+	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
+	 *    @type array       $attributes    Optional. Default [],
+	 * }
+	 *
+	 * @return Control
+	 *
+	 * @throws \InvalidArgumentException Missing argument.
+	 */
+	public static function create( Options $options, $options_key, $id, array $args ) {
+		return new static( $options, $options_key, $id, $args );
 	}
 }

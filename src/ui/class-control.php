@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2014-2018 Peter Putzer.
+ *  Copyright 2018 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -29,202 +29,9 @@ namespace Mundschenk\UI;
 use Mundschenk\Data_Storage\Options;
 
 /**
- * Abstract base class for HTML controls.
+ * An interface for HTML controls.
  */
-abstract class Control {
-
-	/**
-	 * Control ID (= option name).
-	 *
-	 * @var string
-	 */
-	protected $id;
-
-	/**
-	 * Tab ID.
-	 *
-	 * @var string
-	 */
-	protected $tab_id;
-
-	/**
-	 * Section ID.
-	 *
-	 * @var string
-	 */
-	protected $section;
-
-	/**
-	 * Short label. Optional.
-	 *
-	 * @var string|null
-	 */
-	protected $short;
-
-	/**
-	 * Label content with the position of the control marked as %1$s. Optional.
-	 *
-	 * @var string|null
-	 */
-	protected $label;
-
-	/**
-	 * Help text. Optional.
-	 *
-	 * @var string|null
-	 */
-	protected $help_text;
-
-	/**
-	 * Whether the help text should be displayed inline.
-	 *
-	 * @var bool
-	 */
-	protected $inline_help;
-
-	/**
-	 * The default value. Required, but may be an empty string.
-	 *
-	 * @var string|int
-	 */
-	protected $default;
-
-	/**
-	 * Additional HTML attributes to add.
-	 *
-	 * @var array {
-	 *      Attribute/value pairs.
-	 *
-	 *      string $attr Attribute value.
-	 * }
-	 */
-	protected $attributes;
-
-	/**
-	 * Grouped controls.
-	 *
-	 * @var array {
-	 *      An array of Controls.
-	 *
-	 *      Control $control Grouped control.
-	 * }
-	 */
-	protected $grouped_controls = [];
-
-	/**
-	 * The Control this one is grouped with.
-	 *
-	 * @var Control|null
-	 */
-	protected $grouped_with = null;
-
-	/**
-	 * An abstraction of the WordPress Options API.
-	 *
-	 * @var Options
-	 */
-	protected $options;
-
-	/**
-	 * The base path for includes.
-	 *
-	 * @var string
-	 */
-	protected $base_path;
-
-	/**
-	 * The options key.
-	 *
-	 * @var string
-	 */
-	protected $options_key;
-
-	const ALLOWED_INPUT_ATTRIBUTES = [
-		'id'      => [],
-		'name'    => [],
-		'value'   => [],
-		'checked' => [],
-		'type'    => [],
-	];
-
-	const ALLOWED_HTML = [
-		'span'   => [ 'class' => [] ],
-		'input'  => self::ALLOWED_INPUT_ATTRIBUTES,
-		'select' => self::ALLOWED_INPUT_ATTRIBUTES,
-		'option' => [
-			'value'    => [],
-			'selected' => [],
-		],
-		'code'   => [],
-		'strong' => [],
-		'em'     => [],
-		'sub'    => [],
-		'sup'    => [],
-	];
-
-	/**
-	 * Create a new UI control object.
-	 *
-	 * @param Options     $options      Options API handler.
-	 * @param string      $options_key  Database key for the options array.
-	 * @param string      $id           Control ID (equivalent to option name). Required.
-	 * @param string      $tab_id       Tab ID. Required.
-	 * @param string      $section      Section ID. Required.
-	 * @param string|int  $default      The default value. Required, but may be an empty string.
-	 * @param string|null $short        Optional. Short label. Default null.
-	 * @param string|null $label        Optional. Label content with the position of the control marked as %1$s. Default null.
-	 * @param string|null $help_text    Optional. Help text. Default null.
-	 * @param bool        $inline_help  Optional. Display help inline. Default false.
-	 * @param array       $attributes   Optional. Default [].
-	 */
-	protected function __construct( Options $options, $options_key, $id, $tab_id, $section, $default, $short = null, $label = null, $help_text = null, $inline_help = false, $attributes = [] ) {
-		$this->options     = $options;
-		$this->options_key = $options_key;
-		$this->id          = $id;
-		$this->tab_id      = $tab_id;
-		$this->section     = $section;
-		$this->short       = $short ?: '';
-		$this->label       = $label;
-		$this->help_text   = $help_text;
-		$this->inline_help = $inline_help;
-		$this->default     = $default;
-		$this->attributes  = $attributes;
-		$this->base_path   = dirname( dirname( __DIR__ ) );
-	}
-
-	/**
-	 * Prepares keyowrd arguments passed via an array for usage.
-	 *
-	 * @param array $args     Arguments.
-	 * @param array $required Required argument names. 'tab_id' is always required.
-	 *
-	 * @return array
-	 *
-	 * @throws \InvalidArgumentException Thrown when a required argument is missing.
-	 */
-	protected function prepare_args( array $args, array $required ) {
-
-		// Check for required arguments.
-		$required = \wp_parse_args( $required, [ 'tab_id' ] );
-
-		foreach ( $required as $property ) {
-			if ( ! isset( $args[ $property ] ) ) {
-				throw new \InvalidArgumentException( "Missing argument '$property'." );
-			}
-		}
-
-		// Add default arguments.
-		$args = \wp_parse_args( $args, [
-			'section'     => $args['tab_id'],
-			'short'       => null,
-			'label'       => null,
-			'help_text'   => null,
-			'inline_help' => false,
-			'attributes'  => [],
-		] );
-
-		return $args;
-	}
+interface Control {
 
 	/**
 	 * Retrieve the current value for the control.
@@ -232,100 +39,26 @@ abstract class Control {
 	 *
 	 * @return mixed
 	 */
-	protected function get_value() {
-		$options = $this->options->get( $this->options_key );
-
-		return $options[ $this->id ];
-	}
-
-	/**
-	 * Renders control-specific HTML.
-	 *
-	 * @return void
-	 */
-	protected function render_element() {
-		echo $this->get_element_markup(); // WPCS: XSS ok.
-	}
-
-	/**
-	 * Retrieves the control-specific HTML markup.
-	 *
-	 * @return string
-	 */
-	abstract protected function get_element_markup();
+	public function get_value();
 
 	/**
 	 * Render the HTML representation of the control.
 	 */
-	public function render() {
-		require $this->base_path . '/partials/control.php';
-	}
-
-	/**
-	 * Retrieves additional HTML attributes as a string ready for inclusion in markup.
-	 *
-	 * @return string
-	 */
-	protected function get_html_attributes() {
-		$html_attributes = '';
-		if ( ! empty( $this->attributes ) ) {
-			foreach ( $this->attributes as $attr => $val ) {
-				$html_attributes .= \esc_attr( $attr ) . '="' . \esc_attr( $val ) . '" ';
-			}
-		}
-
-		return $html_attributes;
-	}
+	public function render();
 
 	/**
 	 * Retrieve default value.
 	 *
 	 * @return string|int
 	 */
-	public function get_default() {
-		return $this->default;
-	}
+	public function get_default();
 
 	/**
 	 * Retrieve control ID.
 	 *
 	 * @return string
 	 */
-	public function get_id() {
-		return "{$this->options->get_name( $this->options_key )}[{$this->id}]";
-	}
-
-
-	/**
-	 * Retrieves the markup for ID, name and class(es).
-	 * Also adds additional attributes if they are set.
-	 *
-	 * @return string
-	 */
-	protected function get_id_and_class_markup() {
-		$id = \esc_attr( $this->get_id() );
-
-		// Set default ID & name, no class (except for submit buttons).
-		return "id=\"{$id}\" name=\"{$id}\" {$this->get_html_attributes()}";
-	}
-
-	/**
-	 * Determines if the label contains a placeholder for the actual control element(s).
-	 *
-	 * @return bool
-	 */
-	protected function label_has_placeholder() {
-		return false !== strpos( $this->label, '%1$s' );
-	}
-
-	/**
-	 * Determines if this control has an inline help text to display.
-	 *
-	 * @return bool
-	 */
-	protected function has_inline_help() {
-		return $this->inline_help && ! empty( $this->help_text );
-	}
+	public function get_id();
 
 	/**
 	 * Retrieves the label. If the label text contains a string placeholder, it
@@ -333,83 +66,52 @@ abstract class Control {
 	 *
 	 * @var string
 	 */
-	public function get_label() {
-		if ( $this->label_has_placeholder() ) {
-			return sprintf( $this->label, $this->get_element_markup() );
-		} else {
-			return $this->label;
-		}
-	}
+	public function get_label();
 
 	/**
 	 * Register the control with the settings API.
 	 *
 	 * @param string $option_group Application-specific prefix.
 	 */
-	public function register( $option_group ) {
-
-		// Register rendering callbacks only for non-grouped controls.
-		if ( empty( $this->grouped_with ) ) {
-			\add_settings_field( $this->get_id(), $this->short, [ $this, 'render' ], $option_group . $this->tab_id, $this->section );
-		}
-	}
+	public function register( $option_group );
 
 	/**
-	 * Group another control with this one.
+	 * Groups another control with this one.
 	 *
 	 * @param Control $control Any control.
 	 */
-	public function add_grouped_control( Control $control ) {
-		// Prevent self-references.
-		if ( $this !== $control ) {
-			$this->grouped_controls[] = $control;
-			$control->grouped_with    = $this;
-		}
-	}
-
+	public function add_grouped_control( Control $control );
 
 	/**
-	 * Initialize controls for a plugin settings page.
+	 * Registers this control as grouped with another one.
 	 *
-	 * @param array   $defaults {
-	 *        An array of control definitions, indexed by control ID.
-	 *
-	 *        @type array $control_id {
-	 *              A control definition. There may be additional parameters that are passed to the control constructor.
-	 *
-	 *              @type string $ui           The UI object class name.
-	 *              @type string $grouped_with The control ID of the control this one should be grouped with.
-	 *        }
-	 * }
-	 * @param Options $options     The options handler.
-	 * @param string  $options_key The options key.
-	 *
-	 * @return array {
-	 *         An array of control objects, indexed by control ID.
-	 *
-	 *         @type Control $id A control object.
-	 * }
+	 * @param Control $control Any control.
 	 */
-	public static function initialize( array $defaults, Options $options, $options_key ) {
+	public function group_with( Control $control );
 
-		// Create controls from default configuration.
-		$controls = [];
-		$groups   = [];
-		foreach ( $defaults as $control_id => $control_info ) {
-			$controls[ $control_id ] = new $control_info['ui']( $options, $options_key, $control_id, $control_info );
-
-			if ( ! empty( $control_info['grouped_with'] ) ) {
-				$groups[ $control_info['grouped_with'] ][] = $control_id;
-			}
-		}
-
-		// Group controls.
-		foreach ( $groups as $group => $control_ids ) {
-			foreach ( $control_ids as $control_id ) {
-				$controls[ $group ]->add_grouped_control( $controls[ $control_id ] );
-			}
-		}
-
-		return $controls;
-	}
+	/**
+	 * Creates a new control.
+	 *
+	 * @param Options $options      Options API handler.
+	 * @param string  $options_key  Database key for the options array.
+	 * @param string  $id           Control ID (equivalent to option name). Required.
+	 * @param array   $args {
+	 *    Optional and required arguments.
+	 *
+	 *    @type string      $tab_id        Tab ID. Required.
+	 *    @type string      $section       Section ID. Required.
+	 *    @type string|int  $default       The default value. Required, but may be an empty string.
+	 *    @type array       $option_values The allowed values. Required.
+	 *    @type string|null $short         Optional. Short label. Default null.
+	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
+	 *    @type string|null $help_text     Optional. Help text. Default null.
+	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
+	 *    @type array       $attributes    Optional. Default [],
+	 * }
+	 *
+	 * @return Control
+	 *
+	 * @throws \InvalidArgumentException Missing argument.
+	 */
+	public static function create( Options $options, $options_key, $id, array $args );
 }
