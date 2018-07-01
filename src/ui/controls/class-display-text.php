@@ -104,8 +104,7 @@ class Display_Text extends Abstract_Control {
 	 * @var string
 	 */
 	protected function get_element_markup() {
-		$elements = \wp_kses( \implode( '', $this->elements ), self::ALLOWED_HTML );
-		return "<div {$this->get_html_attributes()}>{$elements}</div>";
+		return \wp_kses( \implode( '', $this->elements ), self::ALLOWED_HTML );
 	}
 
 	/**
