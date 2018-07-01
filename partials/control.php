@@ -24,8 +24,13 @@
  *  @license http://www.gnu.org/licenses/gpl-2.0.html
  */
 
+$outer_attributes = $this->get_outer_html_attributes(); // These are already escaped.
+$outer_attributes = empty( $outer_attributes ) ? '' : " {$outer_attributes}";
+
 if ( ! empty( $this->grouped_controls ) ) : ?>
-	<fieldset><legend class="screen-reader-text"><?php echo \esc_html( $this->short ); ?></legend>
+	<fieldset<?php echo $outer_attributes; // WPCS: XSS ok. ?>><legend class="screen-reader-text"><?php echo \esc_html( $this->short ); ?></legend>
+<?php else : ?>
+	<div<?php echo $outer_attributes; // WPCS: XSS ok. ?>>
 <?php endif; // grouped_controls. ?>
 <?php if ( ! empty( $this->label ) ) : ?>
 	<label for="<?php echo \esc_attr( $this->get_id() ); ?>"><?php echo \wp_kses( $this->get_label(), self::ALLOWED_HTML ); ?></label>
@@ -46,12 +51,12 @@ if ( ! empty( $this->grouped_controls ) ) : ?>
 <?php endif; ?>
 
 <?php if ( ! empty( $this->grouped_controls ) ) : ?>
-
 	<?php foreach ( $this->grouped_controls as $control ) : ?>
 		<br />
 		<?php $control->render(); ?>
 	<?php endforeach; ?>
 	</fieldset>
-
+<?php else : ?>
+	</div>
 <?php
 endif; // grouped_controls.

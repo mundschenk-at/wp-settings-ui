@@ -90,7 +90,7 @@ abstract class Abstract_Control implements Control {
 	protected $default;
 
 	/**
-	 * Additional HTML attributes to add.
+	 * Additional HTML attributes to add to the main element (`<input>` etc.).
 	 *
 	 * @var array {
 	 *      Attribute/value pairs.
@@ -99,6 +99,17 @@ abstract class Abstract_Control implements Control {
 	 * }
 	 */
 	protected $attributes;
+
+	/**
+	 * Additional HTML attributes to add to the outer element (either `<fieldset>` or `<div>`).
+	 *
+	 * @var array {
+	 *      Attribute/value pairs.
+	 *
+	 *      string $attr Attribute value.
+	 * }
+	 */
+	protected $outer_attributes;
 
 	/**
 	 * Grouped controls.
@@ -166,31 +177,33 @@ abstract class Abstract_Control implements Control {
 	/**
 	 * Create a new UI control object.
 	 *
-	 * @param Options     $options      Options API handler.
-	 * @param string      $options_key  Database key for the options array.
-	 * @param string      $id           Control ID (equivalent to option name). Required.
-	 * @param string      $tab_id       Tab ID. Required.
-	 * @param string      $section      Section ID. Required.
-	 * @param string|int  $default      The default value. Required, but may be an empty string.
-	 * @param string|null $short        Optional. Short label. Default null.
-	 * @param string|null $label        Optional. Label content with the position of the control marked as %1$s. Default null.
-	 * @param string|null $help_text    Optional. Help text. Default null.
-	 * @param bool        $inline_help  Optional. Display help inline. Default false.
-	 * @param array       $attributes   Optional. Default [].
+	 * @param Options     $options          Options API handler.
+	 * @param string      $options_key      Database key for the options array.
+	 * @param string      $id               Control ID (equivalent to option name). Required.
+	 * @param string      $tab_id           Tab ID. Required.
+	 * @param string      $section          Section ID. Required.
+	 * @param string|int  $default          The default value. Required, but may be an empty string.
+	 * @param string|null $short            Optional. Short label. Default null.
+	 * @param string|null $label            Optional. Label content with the position of the control marked as %1$s. Default null.
+	 * @param string|null $help_text        Optional. Help text. Default null.
+	 * @param bool        $inline_help      Optional. Display help inline. Default false.
+	 * @param array       $attributes       Optional. Attributes for the main element of the control. Default [].
+	 * @param array       $outer_attributes Optional. Attributes for the outer element (´<fieldset>` or `<div>`) of the control. Default [].
 	 */
-	protected function __construct( Options $options, $options_key, $id, $tab_id, $section, $default, $short = null, $label = null, $help_text = null, $inline_help = false, $attributes = [] ) {
-		$this->options     = $options;
-		$this->options_key = $options_key;
-		$this->id          = $id;
-		$this->tab_id      = $tab_id;
-		$this->section     = $section;
-		$this->short       = $short ?: '';
-		$this->label       = $label;
-		$this->help_text   = $help_text;
-		$this->inline_help = $inline_help;
-		$this->default     = $default;
-		$this->attributes  = $attributes;
-		$this->base_path   = dirname( dirname( __DIR__ ) );
+	protected function __construct( Options $options, $options_key, $id, $tab_id, $section, $default, $short = null, $label = null, $help_text = null, $inline_help = false, array $attributes = [], array $outer_attributes = [] ) {
+		$this->options          = $options;
+		$this->options_key      = $options_key;
+		$this->id               = $id;
+		$this->tab_id           = $tab_id;
+		$this->section          = $section;
+		$this->short            = $short ?: '';
+		$this->label            = $label;
+		$this->help_text        = $help_text;
+		$this->inline_help      = $inline_help;
+		$this->default          = $default;
+		$this->attributes       = $attributes;
+		$this->outer_attributes = $outer_attributes;
+		$this->base_path        = dirname( dirname( __DIR__ ) );
 	}
 
 	/**
@@ -216,12 +229,13 @@ abstract class Abstract_Control implements Control {
 
 		// Add default arguments.
 		$args = \wp_parse_args( $args, [
-			'section'     => $args['tab_id'],
-			'short'       => null,
-			'label'       => null,
-			'help_text'   => null,
-			'inline_help' => false,
-			'attributes'  => [],
+			'section'          => $args['tab_id'],
+			'short'            => null,
+			'label'            => null,
+			'help_text'        => null,
+			'inline_help'      => false,
+			'attributes'       => [],
+			'outer_attributes' => [],
 		] );
 
 		return $args;
@@ -265,17 +279,39 @@ abstract class Abstract_Control implements Control {
 	/**
 	 * Retrieves additional HTML attributes as a string ready for inclusion in markup.
 	 *
+	 * @param array $attributes Required.
+	 *
 	 * @return string
 	 */
-	protected function get_html_attributes() {
+	protected function get_html_attributes( array $attributes ) {
 		$html_attributes = '';
-		if ( ! empty( $this->attributes ) ) {
-			foreach ( $this->attributes as $attr => $val ) {
+		if ( ! empty( $attributes ) ) {
+			foreach ( $attributes as $attr => $val ) {
 				$html_attributes .= \esc_attr( $attr ) . '="' . \esc_attr( $val ) . '" ';
 			}
 		}
 
 		return $html_attributes;
+	}
+
+	/**
+	 * Retrieves additional HTML attributes for the inner element as a string
+	 * ready for inclusion in markup.
+	 *
+	 * @return string
+	 */
+	protected function get_inner_html_attributes() {
+		return $this->get_html_attributes( $this->attributes );
+	}
+
+	/**
+	 * Retrieves additional HTML attributes for the outer element as a string
+	 * ready for inclusion in markup.
+	 *
+	 * @return string
+	 */
+	protected function get_outer_html_attributes() {
+		return $this->get_html_attributes( $this->outer_attributes );
 	}
 
 	/**
@@ -307,7 +343,7 @@ abstract class Abstract_Control implements Control {
 		$id = \esc_attr( $this->get_id() );
 
 		// Set default ID & name, no class (except for submit buttons).
-		return "id=\"{$id}\" name=\"{$id}\" {$this->get_html_attributes()}";
+		return "id=\"{$id}\" name=\"{$id}\" {$this->get_inner_html_attributes()}";
 	}
 
 	/**

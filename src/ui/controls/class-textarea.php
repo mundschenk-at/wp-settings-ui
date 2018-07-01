@@ -45,13 +45,14 @@ class Textarea extends Abstract_Control {
 	 * @param array   $args {
 	 *    Optional and required arguments.
 	 *
-	 *    @type string      $tab_id       Tab ID. Required.
-	 *    @type string      $section      Section ID. Required.
-	 *    @type string|int  $default      The default value. Required, but may be an empty string.
-	 *    @type string      $short        Optional. Short label.
-	 *    @type string|null $label        Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text    Optional. Help text. Default null.
-	 *    @type array       $attributes   Optional. Default [],
+	 *    @type string      $tab_id           Tab ID. Required.
+	 *    @type string      $section          Section ID. Required.
+	 *    @type string|int  $default          The default value. Required, but may be an empty string.
+	 *    @type string      $short            Optional. Short label.
+	 *    @type string|null $label            Optional. Label content with the position of the control marked as %1$s. Default null.
+	 *    @type string|null $help_text        Optional. Help text. Default null.
+	 *    @type array       $attributes       Optional. Default [],
+	 *    @type array       $outer_attributes Optional. Default [],
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.

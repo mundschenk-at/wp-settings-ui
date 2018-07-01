@@ -125,14 +125,15 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		$expected = [
-			'foo'         => 'bar',
-			'tab_id'      => 'my_tab',
-			'section'     => 'my_tab',
-			'short'       => null,
-			'label'       => null,
-			'help_text'   => null,
-			'inline_help' => false,
-			'attributes'  => [],
+			'foo'              => 'bar',
+			'tab_id'           => 'my_tab',
+			'section'          => 'my_tab',
+			'short'            => null,
+			'label'            => null,
+			'help_text'        => null,
+			'inline_help'      => false,
+			'attributes'       => [],
+			'outer_attributes' => [],
 		];
 
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing( function( $array1, $array2 ) {
@@ -171,11 +172,12 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	}
 
 	/**
-	 * Test get_html_attributes.
+	 * Test get_inner_html_attributes.
 	 *
 	 * @covers ::get_html_attributes
+	 * @covers ::get_html_attributes
 	 */
-	public function test_get_html_attributes() {
+	public function test_get_inner_html_attributes() {
 		$attributes = [
 			'foo' => 'bar',
 			'rel' => 'self',
@@ -186,7 +188,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			return $input;
 		} );
 
-		$this->assertSame( 'foo="bar" rel="self" ', $this->invokeMethod( $this->control, 'get_html_attributes' ) );
+		$this->assertSame( 'foo="bar" rel="self" ', $this->invokeMethod( $this->control, 'get_inner_html_attributes' ) );
 	}
 
 	/**

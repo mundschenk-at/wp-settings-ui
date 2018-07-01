@@ -76,15 +76,16 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			->makePartial();
 
 		$args = [
-			'input_type'  => 'my_input_type',
-			'tab_id'      => 'my_tab_id',
-			'section'     => 'my_section',
-			'default'     => 'my_default',
-			'short'       => 'my_short',
-			'label'       => 'my_label',
-			'help_text'   => 'my_help_text',
-			'inline_help' => false,
-			'attributes'  => [ 'foo' => 'bar' ],
+			'input_type'       => 'my_input_type',
+			'tab_id'           => 'my_tab_id',
+			'section'          => 'my_section',
+			'default'          => 'my_default',
+			'short'            => 'my_short',
+			'label'            => 'my_label',
+			'help_text'        => 'my_help_text',
+			'inline_help'      => false,
+			'attributes'       => [ 'foo' => 'bar' ],
+			'outer_attributes' => [ 'bar' => 'foo' ],
 		];
 
 		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );
@@ -105,15 +106,16 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			->makePartial();
 
 		$args = [
-			'input_type'  => 'my_input_type',
-			'tab_id'      => 'my_tab_id',
-			'section'     => 'my_section',
-			'default'     => 'my_default',
-			'short'       => 'my_short',
-			'label'       => 'my_label',
-			'help_text'   => 'my_help_text',
-			'inline_help' => false,
-			'attributes'  => [ 'foo' => 'bar' ],
+			'input_type'       => 'my_input_type',
+			'tab_id'           => 'my_tab_id',
+			'section'          => 'my_section',
+			'default'          => 'my_default',
+			'short'            => 'my_short',
+			'label'            => 'my_label',
+			'help_text'        => 'my_help_text',
+			'inline_help'      => false,
+			'attributes'       => [ 'foo' => 'bar' ],
+			'outer_attributes' => [ 'bar' => 'foo' ],
 		];
 
 		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );

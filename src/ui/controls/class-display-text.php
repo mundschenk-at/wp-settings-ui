@@ -73,13 +73,14 @@ class Display_Text extends Abstract_Control {
 	 * @param array   $args {
 	 *    Optional and required arguments.
 	 *
-	 *    @type string      $input_type   HTML input type ('checkbox' etc.). Required.
-	 *    @type string      $tab_id       Tab ID. Required.
-	 *    @type string      $section      Section ID. Required.
-	 *    @type array       $elements     The HTML elements to display (including the outer tag). Required.
-	 *    @type string|null $short        Optional. Short label. Default null.
-	 *    @type bool        $inline_help  Optional. Display help inline. Default false.
-	 *    @type array       $attributes   Optional. Default [],
+	 *    @type string      $input_type       HTML input type ('checkbox' etc.). Required.
+	 *    @type string      $tab_id           Tab ID. Required.
+	 *    @type string      $section          Section ID. Required.
+	 *    @type array       $elements         The HTML elements to display (including the outer tag). Required.
+	 *    @type string|null $short            Optional. Short label. Default null.
+	 *    @type bool        $inline_help      Optional. Display help inline. Default false.
+	 *    @type array       $attributes       Optional. Default [],
+	 *    @type array       $outer_attributes Optional. Default [],
 	 * }
 	 */
 	protected function __construct( Options $options, $options_key, $id, array $args ) {
