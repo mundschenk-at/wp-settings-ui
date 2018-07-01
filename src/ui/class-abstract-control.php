@@ -145,6 +145,7 @@ abstract class Abstract_Control implements Control {
 		'value'   => [],
 		'checked' => [],
 		'type'    => [],
+		'class'   => [],
 	];
 
 	const ALLOWED_HTML = [
