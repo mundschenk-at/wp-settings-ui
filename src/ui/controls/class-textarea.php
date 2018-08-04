@@ -53,6 +53,7 @@ class Textarea extends Abstract_Control {
 	 *    @type string|null $help_text        Optional. Help text. Default null.
 	 *    @type array       $attributes       Optional. Default [],
 	 *    @type array       $outer_attributes Optional. Default [],
+	 *    @type array       $settings_args    Optional. Default [],
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
@@ -60,7 +61,7 @@ class Textarea extends Abstract_Control {
 	public function __construct( Options $options, $options_key, $id, array $args ) {
 		$args = $this->prepare_args( $args, [ 'tab_id', 'default' ] );
 
-		parent::__construct( $options, $id, $options_key, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], false, $args['attributes'] );
+		parent::__construct( $options, $id, $options_key, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], false, $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
 	}
 
 	/**

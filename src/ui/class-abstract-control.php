@@ -150,6 +150,17 @@ abstract class Abstract_Control implements Control {
 	 */
 	protected $options_key;
 
+	/**
+	 * Additional arguments passed to the `add_settings_field` function.
+	 *
+	 * @var array {
+	 *      Attribute/value pairs.
+	 *
+	 *      string $attr Attribute value.
+	 * }
+	 */
+	protected $settings_args;
+
 	const ALLOWED_INPUT_ATTRIBUTES = [
 		'id'      => [],
 		'name'    => [],
@@ -189,8 +200,9 @@ abstract class Abstract_Control implements Control {
 	 * @param bool        $inline_help      Optional. Display help inline. Default false.
 	 * @param array       $attributes       Optional. Attributes for the main element of the control. Default [].
 	 * @param array       $outer_attributes Optional. Attributes for the outer element (´<fieldset>` or `<div>`) of the control. Default [].
+	 * @param array       $settings_args    Optional. Arguments passed to `add_settings_Field`. Default [].
 	 */
-	protected function __construct( Options $options, $options_key, $id, $tab_id, $section, $default, $short = null, $label = null, $help_text = null, $inline_help = false, array $attributes = [], array $outer_attributes = [] ) {
+	protected function __construct( Options $options, $options_key, $id, $tab_id, $section, $default, $short = null, $label = null, $help_text = null, $inline_help = false, array $attributes = [], array $outer_attributes = [], $settings_args = [] ) {
 		$this->options          = $options;
 		$this->options_key      = $options_key;
 		$this->id               = $id;
@@ -203,6 +215,7 @@ abstract class Abstract_Control implements Control {
 		$this->default          = $default;
 		$this->attributes       = $attributes;
 		$this->outer_attributes = $outer_attributes;
+		$this->settings_args    = $settings_args;
 		$this->base_path        = dirname( dirname( __DIR__ ) );
 	}
 
@@ -236,6 +249,7 @@ abstract class Abstract_Control implements Control {
 			'inline_help'      => false,
 			'attributes'       => [],
 			'outer_attributes' => [],
+			'settings_args'    => [],
 		] );
 
 		return $args;
@@ -387,7 +401,7 @@ abstract class Abstract_Control implements Control {
 
 		// Register rendering callbacks only for non-grouped controls.
 		if ( empty( $this->grouped_with ) ) {
-			\add_settings_field( $this->get_id(), $this->short, [ $this, 'render' ], $option_group . $this->tab_id, $this->section );
+			\add_settings_field( $this->get_id(), $this->short, [ $this, 'render' ], $option_group . $this->tab_id, $this->section, $this->settings_args );
 		}
 	}
 

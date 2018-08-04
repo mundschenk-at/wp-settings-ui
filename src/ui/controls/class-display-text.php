@@ -81,13 +81,14 @@ class Display_Text extends Abstract_Control {
 	 *    @type bool        $inline_help      Optional. Display help inline. Default false.
 	 *    @type array       $attributes       Optional. Default [],
 	 *    @type array       $outer_attributes Optional. Default [],
+	 *    @type array       $settings_args    Optional. Default [],
 	 * }
 	 */
 	protected function __construct( Options $options, $options_key, $id, array $args ) {
 		$args           = $this->prepare_args( $args, [ 'elements' ] );
 		$this->elements = $args['elements'];
 
-		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], '', $args['short'], null, null, false, $args['attributes'] );
+		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], '', $args['short'], null, null, false, $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
 	}
 
 	/**
