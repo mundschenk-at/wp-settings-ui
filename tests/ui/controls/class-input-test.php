@@ -86,6 +86,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'inline_help'      => false,
 			'attributes'       => [ 'foo' => 'bar' ],
 			'outer_attributes' => [ 'bar' => 'foo' ],
+			'settings_args'    => [ 'my' => 'settings_arg' ],
 		];
 
 		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );
@@ -116,6 +117,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'inline_help'      => false,
 			'attributes'       => [ 'foo' => 'bar' ],
 			'outer_attributes' => [ 'bar' => 'foo' ],
+			'settings_args'    => [ 'my' => 'settings_arg' ],
 		];
 
 		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );

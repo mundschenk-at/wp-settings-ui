@@ -77,14 +77,16 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 			->makePartial();
 
 		$args = [
-			'tab_id'      => 'my_tab_id',
-			'section'     => 'my_section',
-			'default'     => 'my_default',
-			'short'       => 'my_short',
-			'label'       => 'my_label',
-			'help_text'   => 'my_help_text',
-			'inline_help' => false,
-			'attributes'  => [ 'foo' => 'bar' ],
+			'tab_id'           => 'my_tab_id',
+			'section'          => 'my_section',
+			'default'          => 'my_default',
+			'short'            => 'my_short',
+			'label'            => 'my_label',
+			'help_text'        => 'my_help_text',
+			'inline_help'      => false,
+			'attributes'       => [ 'foo' => 'bar' ],
+			'outer_attributes' => [ 'foo' => 'bar' ],
+			'settings_args'    => [],
 		];
 
 		$this->textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
@@ -105,14 +107,16 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 			->makePartial();
 
 		$args = [
-			'tab_id'      => 'my_tab_id',
-			'section'     => 'my_section',
-			'default'     => 'my_default',
-			'short'       => 'my_short',
-			'label'       => 'my_label',
-			'help_text'   => 'my_help_text',
-			'inline_help' => false,
-			'attributes'  => [ 'foo' => 'bar' ],
+			'tab_id'           => 'my_tab_id',
+			'section'          => 'my_section',
+			'default'          => 'my_default',
+			'short'            => 'my_short',
+			'label'            => 'my_label',
+			'help_text'        => 'my_help_text',
+			'inline_help'      => false,
+			'attributes'       => [ 'foo' => 'bar' ],
+			'outer_attributes' => [ 'foo' => 'bar' ],
+			'settings_args'    => [],
 		];
 
 		$textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );

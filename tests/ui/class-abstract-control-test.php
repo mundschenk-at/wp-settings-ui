@@ -86,7 +86,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $this->control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [] ], Abstract_Control::class );
+		$this->invokeMethod( $this->control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [], [], [ 'my' => 'settings_arg' ] ], Abstract_Control::class );
 	}
 
 	/**
@@ -99,7 +99,21 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [ 'foo' => 'bar' ] ], Abstract_Control::class );
+		$this->invokeMethod( $control, '__construct', [
+			$this->options,
+			'options_key',
+			'id',
+			'tab_id',
+			'section',
+			'default',
+			'short',
+			'label',
+			'help_text',
+			true,
+			[ 'foo' => 'bar' ],
+			[ 'bar' => 'foo' ],
+			[ 'test' => 'value' ],
+		], Abstract_Control::class );
 
 		$this->assertAttributeSame( 'id', 'id', $control );
 		$this->assertAttributeSame( 'tab_id', 'tab_id', $control );
@@ -110,6 +124,8 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->assertAttributeSame( 'help_text', 'help_text', $control );
 		$this->assertAttributeSame( true, 'inline_help', $control );
 		$this->assertAttributeSame( [ 'foo' => 'bar' ], 'attributes', $control );
+		$this->assertAttributeSame( [ 'bar' => 'foo' ], 'outer_attributes', $control );
+		$this->assertAttributeSame( [ 'test' => 'value' ], 'settings_args', $control );
 		$this->assertAttributeInternalType( 'string', 'base_path', $control );
 	}
 
@@ -134,6 +150,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			'inline_help'      => false,
 			'attributes'       => [],
 			'outer_attributes' => [],
+			'settings_args'    => [],
 		];
 
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing( function( $array1, $array2 ) {
@@ -283,7 +300,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 */
 	public function test_register() {
 		$this->control->shouldReceive( 'get_id' )->once()->andReturn( 'id' );
-		Functions\expect( 'add_settings_field' )->once()->with( 'id', 'short', [ $this->control, 'render' ], 'option_group_tab_id', 'section' );
+		Functions\expect( 'add_settings_field' )->once()->with( 'id', 'short', [ $this->control, 'render' ], 'option_group_tab_id', 'section', [ 'my' => 'settings_arg' ] );
 
 		$this->assertNull( $this->control->register( 'option_group_' ) );
 	}
