@@ -264,7 +264,11 @@ abstract class Abstract_Control implements Control {
 	public function get_value() {
 		$options = $this->options->get( $this->options_key );
 
-		return $options[ $this->id ];
+		if ( isset( $options[ $this->id ] ) ) {
+			return $options[ $this->id ];
+		} else {
+			return null;
+		}
 	}
 
 	/**
