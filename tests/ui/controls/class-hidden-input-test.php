@@ -78,7 +78,8 @@ class Hidden_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::__construct
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
-	 * @uses \Mundschenk\UI\Control::__construct
+	 * @uses \Mundschenk\UI\Abstract_Control::__construct
+	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
 	public function test_constructor() {
 		$input = m::mock( Hidden_Input::class )

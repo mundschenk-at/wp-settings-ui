@@ -8,5 +8,8 @@ node_modules/
 # Build artifacts
 build/
 
+# Tests
+tests/coverage
+
 # macOS
 .DS_Store

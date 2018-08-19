@@ -40,7 +40,7 @@ use Mockery as m;
  * @usesDefaultClass \Mundschenk\UI\Controls\Input
  *
  * @uses ::__construct
- * @uses \Mundschenk\UI\Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::__construct
  */
 class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 

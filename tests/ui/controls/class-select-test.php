@@ -40,7 +40,8 @@ use Mockery as m;
  * @usesDefaultClass \Mundschenk\UI\Controls\Select
  *
  * @uses ::__construct
- * @uses \Mundschenk\UI\Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::prepare_args
  */
 class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 

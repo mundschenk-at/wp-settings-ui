@@ -193,6 +193,8 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_html_attributes
 	 * @covers ::get_html_attributes
+	 *
+	 * @uses ::get_inner_html_attributes
 	 */
 	public function test_get_inner_html_attributes() {
 		$attributes = [
@@ -232,6 +234,8 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * Test get_id_and_class_markup.
 	 *
 	 * @covers ::get_id_and_class_markup
+	 *
+	 * @uses ::get_inner_html_attributes
 	 */
 	public function test_get_id_and_class_markup() {
 		Functions\expect( 'esc_attr' )->once()->with( 'foo[bar]' )->andReturn( 'foo[bar]' );
@@ -309,6 +313,8 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * Test add_grouped_control.
 	 *
 	 * @covers ::add_grouped_control
+	 *
+	 * @uses ::group_with
 	 */
 	public function test_add_grouped_control() {
 		$second_control = m::mock( Abstract_Control::class )

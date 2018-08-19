@@ -42,7 +42,8 @@ use Mockery as m;
  *
  * @uses ::__construct
  * @uses \Mundschenk\UI\Controls\Input::__construct
- * @uses \Mundschenk\UI\Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::prepare_args
  */
 class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 

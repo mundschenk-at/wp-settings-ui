@@ -42,7 +42,8 @@ use Mockery as m;
  *
  * @uses ::__construct
  * @uses \Mundschenk\UI\Controls\Input::__construct
- * @uses \Mundschenk\UI\Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::prepare_args
  */
 class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
@@ -132,6 +133,8 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * Tests get_id_and_class_markup.
 	 *
 	 * @covers ::get_id_and_class_markup
+	 *
+	 * @uses \Mundschenk\UI\Abstract_Control::get_inner_html_attributes
 	 */
 	public function test_get_id_and_class_markup() {
 		Functions\expect( 'esc_attr' )->once()->with( 'my_id' )->andReturn( 'my_escaped_id' );
