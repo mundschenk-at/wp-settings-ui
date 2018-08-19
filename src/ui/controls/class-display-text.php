@@ -85,7 +85,7 @@ class Display_Text extends Abstract_Control {
 	 * }
 	 */
 	protected function __construct( Options $options, $options_key, $id, array $args ) {
-		$args           = $this->prepare_args( $args, [ 'elements' ] );
+		$args           = $this->prepare_args( $args, [ 'elements', 'section' ] );
 		$this->elements = $args['elements'];
 
 		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], '', $args['short'], null, null, false, $args['attributes'], $args['outer_attributes'], $args['settings_args'] );

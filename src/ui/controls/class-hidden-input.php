@@ -45,7 +45,7 @@ class Hidden_Input extends Input {
 	 *    Optional and required arguments.
 	 *
 	 *    @type string      $tab_id           Tab ID. Required.
-	 *    @type string      $section          Section ID. Required.
+	 *    @type string      $section          Optional. Section ID. Default Tab ID.
 	 *    @type string|int  $default          The default value. Required, but may be an empty string.
 	 *    @type string|null $short            Optional. Short label. Default null.
 	 *    @type array       $attributes       Optional. Default [],

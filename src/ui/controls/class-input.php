@@ -54,7 +54,7 @@ abstract class Input extends Abstract_Control {
 	 *
 	 *    @type string      $input_type       HTML input type ('checkbox' etc.). Required.
 	 *    @type string      $tab_id           Tab ID. Required.
-	 *    @type string      $section          Section ID. Required.
+	 *    @type string      $section          Optional. Section ID. Default Tab ID.
 	 *    @type string|int  $default          The default value. Required, but may be an empty string.
 	 *    @type string|null $short            Optional. Short label. Default null.
 	 *    @type string|null $label            Optional. Label content with the position of the control marked as %1$s. Default null.
@@ -66,7 +66,7 @@ abstract class Input extends Abstract_Control {
 	 * }
 	 */
 	protected function __construct( Options $options, $options_key, $id, array $args ) {
-		$args             = $this->prepare_args( $args, [ 'input_type', 'tab_id', 'section', 'default' ] );
+		$args             = $this->prepare_args( $args, [ 'input_type', 'tab_id', 'default' ] );
 		$this->input_type = $args['input_type'];
 
 		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], $args['inline_help'], $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
