@@ -61,7 +61,7 @@ class Textarea extends Abstract_Control {
 	public function __construct( Options $options, $options_key, $id, array $args ) {
 		$args = $this->prepare_args( $args, [ 'tab_id', 'default' ] );
 
-		parent::__construct( $options, $id, $options_key, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], false, $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
+		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], false, $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
 	}
 
 	/**
