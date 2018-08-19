@@ -89,7 +89,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'settings_args'    => [ 'my' => 'settings_arg' ],
 		];
 
-		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );
+		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'default' ] )->andReturn( $args );
 
 		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'id', $args ] );
 	}
@@ -120,7 +120,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'settings_args'    => [ 'my' => 'settings_arg' ],
 		];
 
-		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'section', 'default' ] )->andReturn( $args );
+		$input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'default' ] )->andReturn( $args );
 
 		$this->invokeMethod( $input, '__construct', [ $this->options, 'options_key', 'my_id', $args ] );
 
