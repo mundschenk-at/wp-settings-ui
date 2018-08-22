@@ -139,4 +139,22 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->assertSame( '<textarea class="large-text" id="foo">escaped_value</textarea>', $this->invokeMethod( $this->textarea, 'get_element_markup' ) );
 	}
+
+	/**
+	 * Tests create.
+	 *
+	 * @covers ::create
+	 *
+	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
+	 */
+	public function test_create() {
+		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing( function( $array1, $array2 ) {
+			return \array_merge( $array2, $array1 );
+		} );
+
+		$this->assertInstanceOf( Textarea::class, Textarea::create( $this->options, 'my_options', 'my_control_id', [
+			'tab_id'        => 'foo',
+			'default'       => 'bar',
+		] ) );
+	}
 }

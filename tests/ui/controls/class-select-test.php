@@ -190,4 +190,23 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->assertRegExp( "#<select ID_AND_CLASS>(<option value=\"VALUE\" SELECTED>DISPLAY</option>){{$option_count}}</select>#", $this->invokeMethod( $this->select, 'get_element_markup' ) );
 	}
+
+	/**
+	 * Tests create.
+	 *
+	 * @covers ::create
+	 *
+	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
+	 */
+	public function test_create() {
+		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing( function( $array1, $array2 ) {
+			return \array_merge( $array2, $array1 );
+		} );
+
+		$this->assertInstanceOf( Select::class, Select::create( $this->options, 'my_options', 'my_control_id', [
+			'tab_id'        => 'foo',
+			'default'       => 'bar',
+			'option_values' => [ 1, 2 ],
+		] ) );
+	}
 }

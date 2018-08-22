@@ -153,4 +153,22 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->assertSame( '<input type="escaped_input_type" ID_AND_CLASS VALUE/>', $this->invokeMethod( $this->input, 'get_element_markup' ) );
 	}
+
+	/**
+	 * Tests create.
+	 *
+	 * @covers ::create
+	 *
+	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
+	 */
+	public function test_create() {
+		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing( function( $array1, $array2 ) {
+			return \array_merge( $array2, $array1 );
+		} );
+
+		$this->assertInstanceOf( Input::class, Dummy_Input::create( $this->options, 'my_options', 'my_control_id', [
+			'tab_id'  => 'foo',
+			'default' => 'bar',
+		] ) );
+	}
 }
