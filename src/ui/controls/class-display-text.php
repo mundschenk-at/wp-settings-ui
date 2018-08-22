@@ -75,7 +75,7 @@ class Display_Text extends Abstract_Control {
 	 *
 	 *    @type string      $input_type       HTML input type ('checkbox' etc.). Required.
 	 *    @type string      $tab_id           Tab ID. Required.
-	 *    @type string      $section          Section ID. Required.
+	 *    @type string      $section          Optional. Section ID. Default Tab ID.
 	 *    @type array       $elements         The HTML elements to display (including the outer tag). Required.
 	 *    @type string|null $short            Optional. Short label. Default null.
 	 *    @type bool        $inline_help      Optional. Display help inline. Default false.
@@ -85,7 +85,7 @@ class Display_Text extends Abstract_Control {
 	 * }
 	 */
 	protected function __construct( Options $options, $options_key, $id, array $args ) {
-		$args           = $this->prepare_args( $args, [ 'elements', 'section' ] );
+		$args           = $this->prepare_args( $args, [ 'elements' ] );
 		$this->elements = $args['elements'];
 
 		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], '', $args['short'], null, null, false, $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
