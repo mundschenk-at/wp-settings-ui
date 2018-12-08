@@ -67,13 +67,14 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		parent::setUp();
 
 		// Set up virtual filesystem.
-		vfsStream::setup( 'root', null, [
+		$filesystem = [
 			'plugin' => [
 				'partials' => [
 					'control.php' => 'CONTROL',
 				],
 			],
-		] );
+		];
+		vfsStream::setup( 'root', null, $filesystem );
 		set_include_path( 'vfs://root/' ); // @codingStandardsIgnoreLine
 
 		// Mock Mundschenk\Data_Storage\Options instance.
@@ -99,7 +100,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $control, '__construct', [
+		$params = [
 			$this->options,
 			'options_key',
 			'id',
@@ -113,7 +114,9 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			[ 'foo' => 'bar' ],
 			[ 'bar' => 'foo' ],
 			[ 'test' => 'value' ],
-		], Abstract_Control::class );
+		];
+
+		$this->invokeMethod( $control, '__construct', $params, Abstract_Control::class );
 
 		$this->assertAttributeSame( 'id', 'id', $control );
 		$this->assertAttributeSame( 'tab_id', 'tab_id', $control );
@@ -153,9 +156,11 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			'settings_args'    => [],
 		];
 
-		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing( function( $array1, $array2 ) {
-			return \array_merge( $array2, $array1 );
-		} );
+		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
+			function( $array1, $array2 ) {
+				return \array_merge( $array2, $array1 );
+			}
+		);
 
 		$result = $this->invokeMethod( $this->control, 'prepare_args', [ $input, [] ] );
 		\ksort( $expected );
@@ -217,9 +222,11 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 		$this->setValue( $this->control, 'attributes', $attributes );
 
-		Functions\expect( 'esc_attr' )->times( count( $attributes ) * 2 )->andReturnUsing( function( $input ) {
-			return $input;
-		} );
+		Functions\expect( 'esc_attr' )->times( count( $attributes ) * 2 )->andReturnUsing(
+			function( $input ) {
+				return $input;
+			}
+		);
 
 		$this->assertSame( 'foo="bar" rel="self" ', $this->invokeMethod( $this->control, 'get_inner_html_attributes' ) );
 	}

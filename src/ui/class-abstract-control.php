@@ -241,7 +241,7 @@ abstract class Abstract_Control implements Control {
 		}
 
 		// Add default arguments.
-		$args = \wp_parse_args( $args, [
+		$defaults = [
 			'section'          => $args['tab_id'],
 			'short'            => null,
 			'label'            => null,
@@ -250,7 +250,8 @@ abstract class Abstract_Control implements Control {
 			'attributes'       => [],
 			'outer_attributes' => [],
 			'settings_args'    => [],
-		] );
+		];
+		$args     = \wp_parse_args( $args, $defaults );
 
 		return $args;
 	}
