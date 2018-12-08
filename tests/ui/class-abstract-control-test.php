@@ -177,6 +177,20 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	}
 
 	/**
+	 * Test get_value with empty options key.
+	 *
+	 * @covers ::get_value
+	 */
+	public function test_get_value_empty_options_key() {
+		$this->setValue( $this->control, 'options_key', '', Abstract_Control::class );
+		$this->setValue( $this->control, 'id', 'foo', Abstract_Control::class );
+
+		$this->options->shouldReceive( 'get' )->once()->with( 'foo' )->andReturn( 'bar' );
+
+		$this->assertSame( 'bar', $this->control->get_value() );
+	}
+
+	/**
 	 * Test render_element.
 	 *
 	 * @covers ::render_element
@@ -228,6 +242,19 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->options->shouldReceive( 'get_name' )->once()->with( 'options_key' )->andReturn( 'typo_configuration' );
 
 		$this->assertSame( 'typo_configuration[id]', $this->control->get_id() );
+	}
+
+	/**
+	 * Test get_id.
+	 *
+	 * @covers ::get_id
+	 */
+	public function test_get_id_empty_options_iey() {
+		$this->setValue( $this->control, 'options_key', '', Abstract_Control::class );
+
+		$this->options->shouldReceive( 'get_name' )->once()->with( 'id' )->andReturn( 'foobar' );
+
+		$this->assertSame( 'foobar', $this->control->get_id() );
 	}
 
 	/**

@@ -46,7 +46,7 @@ class Select extends Abstract_Control {
 	 * Create a new select control object.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array.
+	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -121,7 +121,7 @@ class Select extends Abstract_Control {
 	 * Creates a new select control
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array.
+	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
