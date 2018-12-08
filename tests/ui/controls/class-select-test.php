@@ -151,10 +151,12 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_value
 	 */
 	public function test_get_value() {
-		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn( [
-			'foo'   => 'bar',
-			'my_id' => 2,
-		] );
+		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn(
+			[
+				'foo'   => 'bar',
+				'my_id' => 2,
+			]
+		);
 
 		$this->assertSame( 2, $this->invokeMethod( $this->select, 'get_value' ) );
 	}
@@ -165,10 +167,12 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_value
 	 */
 	public function test_get_value_unsuccessful() {
-		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn( [
-			'foo'   => 'bar',
-			'my_id' => 'foobar',
-		] );
+		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn(
+			[
+				'foo'   => 'bar',
+				'my_id' => 'foobar',
+			]
+		);
 
 		$this->assertNull( $this->invokeMethod( $this->select, 'get_value' ) );
 	}
@@ -199,14 +203,17 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
 	public function test_create() {
-		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing( function( $array1, $array2 ) {
-			return \array_merge( $array2, $array1 );
-		} );
+		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
+			function( $array1, $array2 ) {
+				return \array_merge( $array2, $array1 );
+			}
+		);
 
-		$this->assertInstanceOf( Select::class, Select::create( $this->options, 'my_options', 'my_control_id', [
+		$args = [
 			'tab_id'        => 'foo',
 			'default'       => 'bar',
 			'option_values' => [ 1, 2 ],
-		] ) );
+		];
+		$this->assertInstanceOf( Select::class, Select::create( $this->options, 'my_options', 'my_control_id', $args ) );
 	}
 }

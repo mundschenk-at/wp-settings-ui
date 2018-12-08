@@ -189,7 +189,7 @@ abstract class Abstract_Control implements Control {
 	 * Create a new UI control object.
 	 *
 	 * @param Options     $options          Options API handler.
-	 * @param string      $options_key      Database key for the options array.
+	 * @param string      $options_key      Database key for the options array. Passing '' means that the control ID is used instead.
 	 * @param string      $id               Control ID (equivalent to option name). Required.
 	 * @param string      $tab_id           Tab ID. Required.
 	 * @param string      $section          Section ID. Required.
@@ -241,7 +241,7 @@ abstract class Abstract_Control implements Control {
 		}
 
 		// Add default arguments.
-		$args = \wp_parse_args( $args, [
+		$defaults = [
 			'section'          => $args['tab_id'],
 			'short'            => null,
 			'label'            => null,
@@ -250,7 +250,8 @@ abstract class Abstract_Control implements Control {
 			'attributes'       => [],
 			'outer_attributes' => [],
 			'settings_args'    => [],
-		] );
+		];
+		$args     = \wp_parse_args( $args, $defaults );
 
 		return $args;
 	}
@@ -262,9 +263,12 @@ abstract class Abstract_Control implements Control {
 	 * @return mixed
 	 */
 	public function get_value() {
-		$options = $this->options->get( $this->options_key );
+		$key     = $this->options_key ?: $this->id;
+		$options = $this->options->get( $key );
 
-		if ( isset( $options[ $this->id ] ) ) {
+		if ( $key === $this->id ) {
+			return $options;
+		} elseif ( isset( $options[ $this->id ] ) ) {
 			return $options[ $this->id ];
 		} else {
 			return null;
@@ -347,7 +351,11 @@ abstract class Abstract_Control implements Control {
 	 * @return string
 	 */
 	public function get_id() {
-		return "{$this->options->get_name( $this->options_key )}[{$this->id}]";
+		if ( ! empty( $this->options_key ) ) {
+			return "{$this->options->get_name( $this->options_key )}[{$this->id}]";
+		} else {
+			return "{$this->options->get_name( $this->id )}";
+		}
 	}
 
 

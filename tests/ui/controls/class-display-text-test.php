@@ -67,9 +67,11 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	protected function setUp() { // @codingStandardsIgnoreLine
 		parent::setUp();
 
-		Functions\expect( 'wp_parse_args' )->atLeast()->once()->andReturnUsing( function( $array1, $array2 ) {
-			return \array_merge( $array2, $array1 );
-		} );
+		Functions\expect( 'wp_parse_args' )->atLeast()->once()->andReturnUsing(
+			function( $array1, $array2 ) {
+				return \array_merge( $array2, $array1 );
+			}
+		);
 
 		// Mock Mundschenk\Data_Storage\Options instance.
 		$this->options = m::mock( Options::class )
@@ -160,9 +162,11 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
 	public function test_create() {
-		$this->assertInstanceOf( Display_Text::class, Display_Text::create( $this->options, 'my_options', 'my_control_id', [
+		$args = [
 			'tab_id'        => 'foo',
 			'elements'      => [],
-		] ) );
+		];
+
+		$this->assertInstanceOf( Display_Text::class, Display_Text::create( $this->options, 'my_options', 'my_control_id', $args ) );
 	}
 }
