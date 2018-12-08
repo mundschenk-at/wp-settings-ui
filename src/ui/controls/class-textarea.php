@@ -70,7 +70,8 @@ class Textarea extends Abstract_Control {
 	 * @var string
 	 */
 	protected function get_element_markup() {
-		$value = \esc_textarea( $this->get_value() );
+		$value = $this->get_value();
+		$value = ! empty( $value ) ? \esc_textarea( $value ) : '';
 
 		return "<textarea class=\"large-text\" {$this->get_id_and_class_markup()}>{$value}</textarea>";
 	}
