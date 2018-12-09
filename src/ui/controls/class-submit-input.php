@@ -77,9 +77,7 @@ class Submit_Input extends Input {
 		$args['label']      = null;
 
 		// Force these addtional arguments.
-		$args['input_type']  = 'submit';
-		$args['help_text']   = null;
-		$args['inline_help'] = false;
+		$args['input_type'] = 'submit';
 
 		// Store button class attribute.
 		$this->button_class = $args['button_class'];
