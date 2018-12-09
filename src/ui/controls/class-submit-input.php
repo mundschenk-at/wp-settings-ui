@@ -103,7 +103,6 @@ class Submit_Input extends Input {
 	 * @return string
 	 */
 	protected function get_id_and_class_markup() {
-		// To avoid duplicate IDs and to add some pretty styling.
-		return 'name="' . \esc_attr( $this->get_id() ) . '" class="' . \esc_attr( $this->button_class ) . '" ' . $this->get_inner_html_attributes();
+		return parent::get_id_and_class_markup() . ' class="' . \esc_attr( $this->button_class ) . '"';
 	}
 }

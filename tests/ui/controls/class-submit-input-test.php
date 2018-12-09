@@ -135,6 +135,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_id_and_class_markup
 	 *
 	 * @uses \Mundschenk\UI\Abstract_Control::get_inner_html_attributes
+	 * @uses \Mundschenk\UI\Abstract_Control::get_id_and_class_markup
 	 */
 	public function test_get_id_and_class_markup() {
 		Functions\expect( 'esc_attr' )->once()->with( 'my_id' )->andReturn( 'my_escaped_id' );
@@ -143,7 +144,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->input->shouldReceive( 'get_id' )->once()->andReturn( 'my_id' );
 		$this->input->shouldReceive( 'get_html_attributes' )->once()->andReturn( 'foo="bar"' );
 
-		$this->assertSame( 'name="my_escaped_id" class="my_escaped_class" foo="bar"', $this->invokeMethod( $this->input, 'get_id_and_class_markup' ) );
+		$this->assertSame( 'id="my_escaped_id" name="my_escaped_id" foo="bar" class="my_escaped_class"', $this->invokeMethod( $this->input, 'get_id_and_class_markup' ) );
 	}
 
 	/**
