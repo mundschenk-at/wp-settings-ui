@@ -67,11 +67,26 @@ class Select extends Abstract_Control {
 	 * @throws \InvalidArgumentException Missing argument.
 	 */
 	public function __construct( Options $options, $options_key, $id, array $args ) {
-		$args = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
-
-		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], $args['inline_help'], $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
-
+		$args                = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
+		$sanitize            = $args['sanitize_callback'] ?: 'sanitize_text_field';
 		$this->option_values = $args['option_values'];
+
+		parent::__construct(
+			$options,
+			$options_key,
+			$id,
+			$args['tab_id'],
+			$args['section'],
+			$args['default'],
+			$args['short'],
+			$args['label'],
+			$args['help_text'],
+			$args['inline_help'],
+			$args['attributes'],
+			$args['outer_attributes'],
+			$args['settings_args'],
+			$sanitize
+		);
 	}
 
 	/**
@@ -115,6 +130,17 @@ class Select extends Abstract_Control {
 		$select_markup .= '</select>';
 
 		return $select_markup;
+	}
+
+	/**
+	 * Sanitizes an option value.
+	 *
+	 * @param  mixed $value The unslashed post variable.
+	 *
+	 * @return string       The sanitized value.
+	 */
+	public function sanitize_value( $value ) {
+		return \sanitize_text_field( $value );
 	}
 
 	/**

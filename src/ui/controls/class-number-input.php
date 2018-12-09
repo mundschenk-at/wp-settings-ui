@@ -58,7 +58,10 @@ class Number_Input extends Input {
 	 * @throws \InvalidArgumentException Missing argument.
 	 */
 	public function __construct( Options $options, $options_key, $id, array $args ) {
-		$args['input_type'] = 'number';
+		$args['input_type']        = 'number';
+		$args['sanitize_callback'] = function( $value ) {
+			return $value + 0;
+		};
 
 		parent::__construct( $options, $options_key, $id, $args );
 	}

@@ -68,8 +68,24 @@ abstract class Input extends Abstract_Control {
 	protected function __construct( Options $options, $options_key, $id, array $args ) {
 		$args             = $this->prepare_args( $args, [ 'input_type', 'tab_id', 'default' ] );
 		$this->input_type = $args['input_type'];
+		$sanitize         = isset( $args['sanitize_callback'] ) ? $args['sanitize_callback'] : 'sanitize_text_field';
 
-		parent::__construct( $options, $options_key, $id, $args['tab_id'], $args['section'], $args['default'], $args['short'], $args['label'], $args['help_text'], $args['inline_help'], $args['attributes'], $args['outer_attributes'], $args['settings_args'] );
+		parent::__construct(
+			$options,
+			$options_key,
+			$id,
+			$args['tab_id'],
+			$args['section'],
+			$args['default'],
+			$args['short'],
+			$args['label'],
+			$args['help_text'],
+			$args['inline_help'],
+			$args['attributes'],
+			$args['outer_attributes'],
+			$args['settings_args'],
+			$sanitize
+		);
 	}
 
 	/**

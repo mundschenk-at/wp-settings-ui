@@ -77,17 +77,18 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 			->makePartial();
 
 		$args = [
-			'tab_id'           => 'my_tab_id',
-			'section'          => 'my_section',
-			'default'          => 'my_default',
-			'short'            => 'my_short',
-			'label'            => 'my_label',
-			'help_text'        => 'my_help_text',
-			'attributes'       => [ 'foo' => 'bar' ],
-			'outer_attributes' => [ 'foo' => 'bar' ],
-			'inline_help'      => false,
-			'option_values'    => [ 'option', 'values', 'three' ],
-			'settings_args'    => [ 'my' => 'settings_arg' ],
+			'tab_id'            => 'my_tab_id',
+			'section'           => 'my_section',
+			'default'           => 'my_default',
+			'short'             => 'my_short',
+			'label'             => 'my_label',
+			'help_text'         => 'my_help_text',
+			'attributes'        => [ 'foo' => 'bar' ],
+			'outer_attributes'  => [ 'foo' => 'bar' ],
+			'inline_help'       => false,
+			'option_values'     => [ 'option', 'values', 'three' ],
+			'settings_args'     => [ 'my' => 'settings_arg' ],
+			'sanitize_callback' => 'my_sanitize_function',
 		];
 
 		$this->select->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default', 'option_values' ] )->andReturn( $args );
@@ -108,17 +109,18 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 			->makePartial();
 
 		$args = [
-			'tab_id'           => 'my_tab_id',
-			'section'          => 'my_section',
-			'default'          => 'my_default',
-			'short'            => 'my_short',
-			'label'            => 'my_label',
-			'help_text'        => 'my_help_text',
-			'inline_help'      => false,
-			'attributes'       => [ 'foo' => 'bar' ],
-			'outer_attributes' => [ 'foo' => 'bar' ],
-			'option_values'    => [ 'option', 'values' ],
-			'settings_args'    => [ 'my' => 'settings_arg' ],
+			'tab_id'            => 'my_tab_id',
+			'section'           => 'my_section',
+			'default'           => 'my_default',
+			'short'             => 'my_short',
+			'label'             => 'my_label',
+			'help_text'         => 'my_help_text',
+			'inline_help'       => false,
+			'attributes'        => [ 'foo' => 'bar' ],
+			'outer_attributes'  => [ 'foo' => 'bar' ],
+			'option_values'     => [ 'option', 'values' ],
+			'settings_args'     => [ 'my' => 'settings_arg' ],
+			'sanitize_callback' => 'my_sanitize_function',
 		];
 
 		$select->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default', 'option_values' ] )->andReturn( $args );

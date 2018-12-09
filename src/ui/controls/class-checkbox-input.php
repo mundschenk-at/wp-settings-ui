@@ -58,7 +58,8 @@ class Checkbox_Input extends Input {
 	 * @throws \InvalidArgumentException Missing argument.
 	 */
 	public function __construct( Options $options, $options_key, $id, array $args ) {
-		$args['input_type'] = 'checkbox';
+		$args['input_type']        = 'checkbox';
+		$args['sanitize_callback'] = 'boolval';
 
 		parent::__construct( $options, $options_key, $id, $args );
 	}

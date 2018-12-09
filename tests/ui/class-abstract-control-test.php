@@ -144,16 +144,17 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		$expected = [
-			'foo'              => 'bar',
-			'tab_id'           => 'my_tab',
-			'section'          => 'my_tab',
-			'short'            => null,
-			'label'            => null,
-			'help_text'        => null,
-			'inline_help'      => false,
-			'attributes'       => [],
-			'outer_attributes' => [],
-			'settings_args'    => [],
+			'foo'               => 'bar',
+			'tab_id'            => 'my_tab',
+			'section'           => 'my_tab',
+			'short'             => null,
+			'label'             => null,
+			'help_text'         => null,
+			'inline_help'       => false,
+			'attributes'        => [],
+			'outer_attributes'  => [],
+			'settings_args'     => [],
+			'sanitize_callback' => null,
 		];
 
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(

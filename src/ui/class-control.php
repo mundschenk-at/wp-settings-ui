@@ -90,6 +90,15 @@ interface Control {
 	public function group_with( Control $control );
 
 	/**
+	 * Sanitizes an option value.
+	 *
+	 * @param  mixed $value The unslashed post variable.
+	 *
+	 * @return mixed        The sanitized value.
+	 */
+	public function sanitize( $value );
+
+	/**
 	 * Creates a new control.
 	 *
 	 * @param Options $options      Options API handler.

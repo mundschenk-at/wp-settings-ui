@@ -161,6 +161,13 @@ abstract class Abstract_Control implements Control {
 	 */
 	protected $settings_args;
 
+	/**
+	 * A sanitiziation callback.
+	 *
+	 * @var callable|null
+	 */
+	protected $sanitize_callback;
+
 	const ALLOWED_INPUT_ATTRIBUTES = [
 		'id'      => [],
 		'name'    => [],
@@ -188,35 +195,37 @@ abstract class Abstract_Control implements Control {
 	/**
 	 * Create a new UI control object.
 	 *
-	 * @param Options     $options          Options API handler.
-	 * @param string      $options_key      Database key for the options array. Passing '' means that the control ID is used instead.
-	 * @param string      $id               Control ID (equivalent to option name). Required.
-	 * @param string      $tab_id           Tab ID. Required.
-	 * @param string      $section          Section ID. Required.
-	 * @param string|int  $default          The default value. Required, but may be an empty string.
-	 * @param string|null $short            Optional. Short label. Default null.
-	 * @param string|null $label            Optional. Label content with the position of the control marked as %1$s. Default null.
-	 * @param string|null $help_text        Optional. Help text. Default null.
-	 * @param bool        $inline_help      Optional. Display help inline. Default false.
-	 * @param array       $attributes       Optional. Attributes for the main element of the control. Default [].
-	 * @param array       $outer_attributes Optional. Attributes for the outer element (´<fieldset>` or `<div>`) of the control. Default [].
-	 * @param array       $settings_args    Optional. Arguments passed to `add_settings_Field`. Default [].
+	 * @param Options       $options          Options API handler.
+	 * @param string        $options_key      Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param string        $id               Control ID (equivalent to option name). Required.
+	 * @param string        $tab_id           Tab ID. Required.
+	 * @param string        $section          Section ID. Required.
+	 * @param string|int    $default          The default value. Required, but may be an empty string.
+	 * @param string|null   $short            Optional. Short label. Default null.
+	 * @param string|null   $label            Optional. Label content with the position of the control marked as %1$s. Default null.
+	 * @param string|null   $help_text        Optional. Help text. Default null.
+	 * @param bool          $inline_help      Optional. Display help inline. Default false.
+	 * @param array         $attributes       Optional. Attributes for the main element of the control. Default [].
+	 * @param array         $outer_attributes Optional. Attributes for the outer element (´<fieldset>` or `<div>`) of the control. Default [].
+	 * @param array         $settings_args    Optional. Arguments passed to `add_settings_Field`. Default [].
+	 * @param callable|null $sanitize_callback Optional. A callback to sanitize $_POST data. Default null.
 	 */
-	protected function __construct( Options $options, $options_key, $id, $tab_id, $section, $default, $short = null, $label = null, $help_text = null, $inline_help = false, array $attributes = [], array $outer_attributes = [], $settings_args = [] ) {
-		$this->options          = $options;
-		$this->options_key      = $options_key;
-		$this->id               = $id;
-		$this->tab_id           = $tab_id;
-		$this->section          = $section;
-		$this->short            = $short ?: '';
-		$this->label            = $label;
-		$this->help_text        = $help_text;
-		$this->inline_help      = $inline_help;
-		$this->default          = $default;
-		$this->attributes       = $attributes;
-		$this->outer_attributes = $outer_attributes;
-		$this->settings_args    = $settings_args;
-		$this->base_path        = dirname( dirname( __DIR__ ) );
+	protected function __construct( Options $options, $options_key, $id, $tab_id, $section, $default, $short = null, $label = null, $help_text = null, $inline_help = false, array $attributes = [], array $outer_attributes = [], $settings_args = [], $sanitize_callback = null ) {
+		$this->options           = $options;
+		$this->options_key       = $options_key;
+		$this->id                = $id;
+		$this->tab_id            = $tab_id;
+		$this->section           = $section;
+		$this->short             = $short ?: '';
+		$this->label             = $label;
+		$this->help_text         = $help_text;
+		$this->inline_help       = $inline_help;
+		$this->default           = $default;
+		$this->attributes        = $attributes;
+		$this->outer_attributes  = $outer_attributes;
+		$this->settings_args     = $settings_args;
+		$this->sanitize_callback = $sanitize_callback;
+		$this->base_path         = dirname( dirname( __DIR__ ) );
 	}
 
 	/**
@@ -242,14 +251,15 @@ abstract class Abstract_Control implements Control {
 
 		// Add default arguments.
 		$defaults = [
-			'section'          => $args['tab_id'],
-			'short'            => null,
-			'label'            => null,
-			'help_text'        => null,
-			'inline_help'      => false,
-			'attributes'       => [],
-			'outer_attributes' => [],
-			'settings_args'    => [],
+			'section'           => $args['tab_id'],
+			'short'             => null,
+			'label'             => null,
+			'help_text'         => null,
+			'inline_help'       => false,
+			'attributes'        => [],
+			'outer_attributes'  => [],
+			'settings_args'     => [],
+			'sanitize_callback' => null,
 		];
 		$args     = \wp_parse_args( $args, $defaults );
 
@@ -440,5 +450,22 @@ abstract class Abstract_Control implements Control {
 		if ( $this !== $control ) {
 			$this->grouped_with = $control;
 		}
+	}
+
+	/**
+	 * Sanitizes an option value.
+	 *
+	 * @param  mixed $value The unslashed post variable.
+	 *
+	 * @return mixed        The sanitized value.
+	 */
+	public function sanitize( $value ) {
+		$sanitize = $this->sanitize_callback;
+
+		if ( \is_callable( $sanitize ) ) {
+			return $sanitize( $value );
+		}
+
+		return $value;
 	}
 }
