@@ -145,4 +145,13 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->assertSame( 'name="my_escaped_id" class="my_escaped_class" foo="bar"', $this->invokeMethod( $this->input, 'get_id_and_class_markup' ) );
 	}
+
+	/**
+	 * Tests get_value.
+	 *
+	 * @covers ::get_value
+	 */
+	public function test_get_value() {
+		$this->assertSame( 'my_label', $this->input->get_value() );
+	}
 }

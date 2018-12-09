@@ -42,6 +42,13 @@ class Submit_Input extends Input {
 	protected $button_class;
 
 	/**
+	 * Optional button label.
+	 *
+	 * @var string
+	 */
+	protected $button_label;
+
+	/**
 	 * Create a new input control object.
 	 *
 	 * @param Options $options      Options API handler.
@@ -55,6 +62,7 @@ class Submit_Input extends Input {
 	 *    @type string|int  $default      The default value. Required, but may be an empty string.
 	 *    @type string      $button_class Required.
 	 *    @type string|null $short        Optional. Short label. Default null.
+	 *    @type string|null $label        Optional. The actual button label. Default null (browser dependant).
 	 *    @type array       $attributes   Optional. Default [],
 	 * }
 	 *
@@ -64,9 +72,12 @@ class Submit_Input extends Input {
 		// Ensure that there is a button class argument.
 		$args = $this->prepare_args( $args, [ 'button_class' ] );
 
+		// Ensure proper button label handling.
+		$this->button_label = $args['label'];
+		$args['label']      = null;
+
 		// Force these addtional arguments.
 		$args['input_type']  = 'submit';
-		$args['label']       = null;
 		$args['help_text']   = null;
 		$args['inline_help'] = false;
 
@@ -75,6 +86,15 @@ class Submit_Input extends Input {
 
 		// Call parent.
 		parent::__construct( $options, $options_key, $id, $args );
+	}
+
+	/**
+	 * Retrieve the current button name.
+	 *
+	 * @return string
+	 */
+	public function get_value() {
+		return $this->button_label;
 	}
 
 	/**
