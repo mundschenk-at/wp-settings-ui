@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2014-2018 Peter Putzer.
+ *  Copyright 2014-2019 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -291,7 +291,7 @@ abstract class Abstract_Control implements Control {
 	 * @return void
 	 */
 	protected function render_element() {
-		echo $this->get_element_markup(); // WPCS: XSS ok.
+		echo $this->get_element_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
