@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2019 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -27,23 +27,25 @@
 $outer_attributes = $this->get_outer_html_attributes(); // These are already escaped.
 $outer_attributes = empty( $outer_attributes ) ? '' : " {$outer_attributes}";
 
-if ( ! empty( $this->grouped_controls ) ) : ?>
-	<fieldset<?php echo $outer_attributes; // WPCS: XSS ok. ?>><legend class="screen-reader-text"><?php echo \esc_html( $this->short ); ?></legend>
+
+?>
+<?php if ( ! empty( $this->grouped_controls ) ) : ?>
+	<fieldset<?php echo $outer_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		<legend class="screen-reader-text"><?php echo \esc_html( $this->short ); ?></legend>
 <?php else : ?>
-	<div<?php echo $outer_attributes; // WPCS: XSS ok. ?>>
+	<div<?php echo $outer_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 <?php endif; // grouped_controls. ?>
+
 <?php if ( ! empty( $this->label ) ) : ?>
 	<label for="<?php echo \esc_attr( $this->get_id() ); ?>"><?php echo \wp_kses( $this->get_label(), self::ALLOWED_HTML ); ?></label>
 <?php elseif ( $this->has_inline_help() ) : ?>
 	<label for="<?php echo \esc_attr( $this->get_id() ); ?>">
-<?php
-	endif;
+<?php endif; ?>
 
-	// Control-specific markup.
-	if ( ! $this->label_has_placeholder() ) :
-		$this->render_element();
-	endif;
-?>
+<?php if ( ! $this->label_has_placeholder() ) : ?>
+		<?php $this->render_element(); // Control-specific markup. ?>
+<?php endif; ?>
+
 <?php if ( $this->has_inline_help() ) : ?>
 	<span class="description"><?php echo \wp_kses( $this->help_text, [ 'code' => [] ] ); ?></span></label>
 <?php elseif ( ! empty( $this->help_text ) ) : ?>
@@ -58,5 +60,5 @@ if ( ! empty( $this->grouped_controls ) ) : ?>
 	</fieldset>
 <?php else : ?>
 	</div>
+<?php endif; // grouped_controls. ?>
 <?php
-endif; // grouped_controls.
