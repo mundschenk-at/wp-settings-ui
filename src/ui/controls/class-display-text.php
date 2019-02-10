@@ -36,13 +36,20 @@ use Mundschenk\Data_Storage\Options;
  */
 class Display_Text extends Abstract_Control {
 
+	const ALLOWED_ATTRIBUTES = [
+		'id'               => [],
+		'name'             => [],
+		'class'            => [],
+		'aria-describedby' => [],
+	];
+
 	const ALLOWED_HTML = [
-		'div'    => [ 'class' => [] ],
-		'span'   => [ 'class' => [] ],
-		'p'      => [ 'class' => [] ],
-		'ul'     => [ 'class' => [] ],
-		'ol'     => [ 'class' => [] ],
-		'li'     => [ 'class' => [] ],
+		'div'    => [ self::ALLOWED_ATTRIBUTES ],
+		'span'   => [ self::ALLOWED_ATTRIBUTES ],
+		'p'      => [ self::ALLOWED_ATTRIBUTES ],
+		'ul'     => [ self::ALLOWED_ATTRIBUTES ],
+		'ol'     => [ self::ALLOWED_ATTRIBUTES ],
+		'li'     => [ self::ALLOWED_ATTRIBUTES ],
 		'a'      => [
 			'class'  => [],
 			'href'   => [],
