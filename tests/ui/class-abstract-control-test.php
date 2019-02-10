@@ -276,9 +276,9 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		Functions\expect( 'esc_attr' )->once()->with( 'foo[bar]' )->andReturn( 'foo[bar]' );
 
 		$this->control->shouldReceive( 'get_id' )->once()->andReturn( 'foo[bar]' );
-		$this->control->shouldReceive( 'get_html_attributes' )->once()->andReturn( 'foo="bar" ' );
+		$this->control->shouldReceive( 'get_html_attributes' )->once()->andReturn( 'foo="bar"' );
 
-		$this->assertSame( 'id="foo[bar]" name="foo[bar]" foo="bar" ', $this->invokeMethod( $this->control, 'get_id_and_class_markup' ) );
+		$this->assertSame( 'id="foo[bar]" name="foo[bar]" foo="bar" aria-describedby="foo[bar]-description"', $this->invokeMethod( $this->control, 'get_id_and_class_markup' ) );
 	}
 
 	/**

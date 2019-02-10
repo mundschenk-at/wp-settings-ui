@@ -169,12 +169,13 @@ abstract class Abstract_Control implements Control {
 	protected $sanitize_callback;
 
 	const ALLOWED_INPUT_ATTRIBUTES = [
-		'id'      => [],
-		'name'    => [],
-		'value'   => [],
-		'checked' => [],
-		'type'    => [],
-		'class'   => [],
+		'id'               => [],
+		'name'             => [],
+		'value'            => [],
+		'checked'          => [],
+		'type'             => [],
+		'class'            => [],
+		'aria-describedby' => [],
 	];
 
 	const ALLOWED_HTML = [
@@ -387,10 +388,11 @@ abstract class Abstract_Control implements Control {
 	 * @return string
 	 */
 	protected function get_id_and_class_markup() {
-		$id = \esc_attr( $this->get_id() );
+		$id   = \esc_attr( $this->get_id() );
+		$aria = ! empty( $this->help_text ) ? " aria-describedby=\"{$id}-description\"" : '';
 
 		// Set default ID & name, no class (except for submit buttons).
-		return "id=\"{$id}\" name=\"{$id}\" {$this->get_inner_html_attributes()}";
+		return "id=\"{$id}\" name=\"{$id}\" {$this->get_inner_html_attributes()}{$aria}";
 	}
 
 	/**
