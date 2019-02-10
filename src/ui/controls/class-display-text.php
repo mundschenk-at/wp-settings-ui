@@ -44,12 +44,12 @@ class Display_Text extends Abstract_Control {
 	];
 
 	const ALLOWED_HTML = [
-		'div'    => [ self::ALLOWED_ATTRIBUTES ],
-		'span'   => [ self::ALLOWED_ATTRIBUTES ],
-		'p'      => [ self::ALLOWED_ATTRIBUTES ],
-		'ul'     => [ self::ALLOWED_ATTRIBUTES ],
-		'ol'     => [ self::ALLOWED_ATTRIBUTES ],
-		'li'     => [ self::ALLOWED_ATTRIBUTES ],
+		'div'    => self::ALLOWED_ATTRIBUTES,
+		'span'   => self::ALLOWED_ATTRIBUTES,
+		'p'      => self::ALLOWED_ATTRIBUTES,
+		'ul'     => self::ALLOWED_ATTRIBUTES,
+		'ol'     => self::ALLOWED_ATTRIBUTES,
+		'li'     => self::ALLOWED_ATTRIBUTES,
 		'a'      => [
 			'class'  => [],
 			'href'   => [],
@@ -107,8 +107,8 @@ class Display_Text extends Abstract_Control {
 			'',
 			$args['short'],
 			null,
-			null,
-			false,
+			$args['help_text'],
+			$args['inline_help'],
 			$args['attributes'],
 			$args['outer_attributes'],
 			$args['settings_args'],
