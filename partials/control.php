@@ -27,6 +27,8 @@
 $outer_attributes = $this->get_outer_html_attributes(); // These are already escaped.
 $outer_attributes = empty( $outer_attributes ) ? '' : " {$outer_attributes}";
 
+$control_id = $this->get_id();
+
 ?>
 <?php if ( ! empty( $this->grouped_controls ) ) : ?>
 	<fieldset<?php echo $outer_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -36,9 +38,9 @@ $outer_attributes = empty( $outer_attributes ) ? '' : " {$outer_attributes}";
 <?php endif; // grouped_controls. ?>
 
 <?php if ( ! empty( $this->label ) ) : ?>
-	<label for="<?php echo \esc_attr( $this->get_id() ); ?>"><?php echo \wp_kses( $this->get_label(), self::ALLOWED_HTML ); ?></label>
+	<label for="<?php echo \esc_attr( $control_id ); ?>"><?php echo \wp_kses( $this->get_label(), self::ALLOWED_HTML ); ?></label>
 <?php elseif ( $this->has_inline_help() ) : ?>
-	<label for="<?php echo \esc_attr( $this->get_id() ); ?>">
+	<label for="<?php echo \esc_attr( $control_id ); ?>">
 <?php endif; ?>
 
 <?php if ( ! $this->label_has_placeholder() ) : ?>
@@ -46,9 +48,9 @@ $outer_attributes = empty( $outer_attributes ) ? '' : " {$outer_attributes}";
 <?php endif; ?>
 
 <?php if ( $this->has_inline_help() ) : ?>
-	<span class="description"><?php echo \wp_kses( $this->help_text, self::ALLOWED_DESCRIPTION_HTML ); ?></span></label>
+	<span id="<?php echo esc_attr( $control_id ); ?>-description" class="description"><?php echo \wp_kses( $this->help_text, self::ALLOWED_DESCRIPTION_HTML ); ?></span></label>
 <?php elseif ( ! empty( $this->help_text ) ) : ?>
-	<p class="description"><?php echo \wp_kses( $this->help_text, self::ALLOWED_DESCRIPTION_HTML ); ?></p>
+	<p id="<?php echo esc_attr( $control_id ); ?>-description" class="description"><?php echo \wp_kses( $this->help_text, self::ALLOWED_DESCRIPTION_HTML ); ?></p>
 <?php endif; ?>
 
 <?php if ( ! empty( $this->grouped_controls ) ) : ?>
