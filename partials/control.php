@@ -27,7 +27,6 @@
 $outer_attributes = $this->get_outer_html_attributes(); // These are already escaped.
 $outer_attributes = empty( $outer_attributes ) ? '' : " {$outer_attributes}";
 
-
 ?>
 <?php if ( ! empty( $this->grouped_controls ) ) : ?>
 	<fieldset<?php echo $outer_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -47,9 +46,9 @@ $outer_attributes = empty( $outer_attributes ) ? '' : " {$outer_attributes}";
 <?php endif; ?>
 
 <?php if ( $this->has_inline_help() ) : ?>
-	<span class="description"><?php echo \wp_kses( $this->help_text, [ 'code' => [] ] ); ?></span></label>
+	<span class="description"><?php echo \wp_kses( $this->help_text, self::ALLOWED_DESCRIPTION_HTML ); ?></span></label>
 <?php elseif ( ! empty( $this->help_text ) ) : ?>
-	<p class="description"><?php echo \wp_kses( $this->help_text, [ 'code' => [] ] ); ?></p>
+	<p class="description"><?php echo \wp_kses( $this->help_text, self::ALLOWED_DESCRIPTION_HTML ); ?></p>
 <?php endif; ?>
 
 <?php if ( ! empty( $this->grouped_controls ) ) : ?>

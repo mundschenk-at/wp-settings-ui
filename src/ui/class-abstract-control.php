@@ -190,6 +190,17 @@ abstract class Abstract_Control implements Control {
 		'em'     => [],
 		'sub'    => [],
 		'sup'    => [],
+		'br'     => [],
+	];
+
+	const ALLOWED_DESCRIPTION_HTML = [
+		'code'   => [],
+		'strong' => [],
+		'em'     => [],
+		'sub'    => [],
+		'sup'    => [],
+		'br'     => [],
+		'span'   => [ 'class' => [] ],
 	];
 
 	/**
