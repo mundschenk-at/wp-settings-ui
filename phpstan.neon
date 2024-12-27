@@ -1,0 +1,13 @@
+parameters:
+	reportUnmatchedIgnoredErrors: true
+	treatPhpDocTypesAsCertain: false
+
+	level: 7
+
+	paths:
+		- src
+		- tests
+
+	excludePaths:
+		analyse:
+			- vendor

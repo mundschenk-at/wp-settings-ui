@@ -13,7 +13,7 @@
     ],
 
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.4.0",
         "mundschenk-at/wp-data-storage": "^1.0"
     },
     "require-dev": {
@@ -24,6 +24,12 @@
         "phpunit/phpunit": "9.*||10.*||11.*",
         "mikey179/vfsstream": "~1",
         "brain/monkey": "^2.2",
+        "roave/security-advisories": "dev-master",
+        "phpstan/phpstan": "^2",
+        "szepeviktor/phpstan-wordpress": "^2.0.0-rc.2",
+        "phpstan/extension-installer": "^1.2",
+        "phpstan/phpstan-phpunit": "^2",
+        "phpstan/phpstan-mockery": "^2.0"
     },
 
     "autoload": {
@@ -36,7 +42,8 @@
     "config": {
         "classmap-authoritative": false,
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
         }
     },
 
@@ -52,6 +59,9 @@
         ],
         "phpcs": [
           "vendor/bin/phpcs -ps src/ tests/ --extensions=php"
+        ],
+        "phpstan": [
+            "phpstan analyse --ansi"
         ]
     }
 }
