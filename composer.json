@@ -58,7 +58,7 @@
           "@composer test -- --coverage-html tests/coverage"
         ],
         "phpcs": [
-          "vendor/bin/phpcs -ps src/ tests/ --extensions=php"
+            "phpcs -ps src/ tests/ --extensions=php --runtime-set testVersion 7.4- --cache"
         ],
         "phpstan": [
             "phpstan analyse --ansi"
