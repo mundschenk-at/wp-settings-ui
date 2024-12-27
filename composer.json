@@ -17,14 +17,13 @@
         "mundschenk-at/wp-data-storage": "^1.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "dev-master",
-        "wp-coding-standards/wpcs": "^2.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
-        "phpunit/phpunit": "5.*||6.*||7.*",
+        "squizlabs/php_codesniffer": "^3.4",
+        "wp-coding-standards/wpcs": "^3",
+        "phpcompatibility/php-compatibility": "^9.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpunit/phpunit": "9.*||10.*||11.*",
         "mikey179/vfsstream": "~1",
-        "brain/monkey": "^2.0@dev",
-        "roave/security-advisories": "dev-master"
+        "brain/monkey": "^2.2",
     },
 
     "autoload": {
@@ -35,7 +34,10 @@
     },
 
     "config": {
-        "classmap-authoritative": false
+        "classmap-authoritative": false,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
 
     "minimum-stability": "dev",
