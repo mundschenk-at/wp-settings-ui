@@ -55,25 +55,27 @@ class Control_Factory_Test extends \Mundschenk\UI\Tests\TestCase {
 		 *
 		 * @var Options&m\MockInterface $options
 		 */
-		$options      = m::mock( Options::class );
-		$options_key  = 'my_options_key';
-		$number_input = m::mock( 'overload:' . \Mundschenk\UI\Number_Input::class );
-		$checkbox     = m::mock( 'overload:' . \Mundschenk\UI\Checkbox_Input::class );
-		$select       = m::mock( 'overload:' . \Mundschenk\UI\Select::class );
+		$options     = m::mock( Options::class );
+		$options_key = 'my_options_key';
+
+		// Class mocks.
+		$number_input = m::mock( 'overload:' . \Mundschenk\UI\Controls\Number_Input::class );
+		$checkbox     = m::mock( 'overload:' . \Mundschenk\UI\Controls\Checkbox_Input::class );
+		$select       = m::mock( 'overload:' . \Mundschenk\UI\Controls\Select::class );
 
 		$defaults = [
 			'foo'    => [
 				'tab_id' => 'my-tab',
-				'ui'     => \Mundschenk\UI\Number_Input::class,
+				'ui'     => \Mundschenk\UI\Controls\Number_Input::class,
 			],
 			'check1' => [
 				'tab_id' => 'my-tab',
-				'ui'     => \Mundschenk\UI\Checkbox_Input::class,
+				'ui'     => \Mundschenk\UI\Controls\Checkbox_Input::class,
 			],
 			'check2' => [
 				'tab_id'       => 'other-tab',
 				'grouped_with' => 'check1',
-				'ui'           => \Mundschenk\UI\Select::class,
+				'ui'           => \Mundschenk\UI\Controls\Select::class,
 			],
 		];
 
@@ -83,7 +85,7 @@ class Control_Factory_Test extends \Mundschenk\UI\Tests\TestCase {
 		$select->shouldReceive( 'create' )->once()->andReturn( $select );
 
 		// Set up expectations.
-		$checkbox->shouldReceive( 'add_grouped_control' )->once()->with( m::type( \Mundschenk\UI\Select::class ) );
+		$checkbox->shouldReceive( 'add_grouped_control' )->once()->with( m::type( \Mundschenk\UI\Controls\Select::class ) );
 
 		// Do it.
 		$this->assertIsArray( Control_Factory::initialize( $defaults, $options, $options_key ) );
