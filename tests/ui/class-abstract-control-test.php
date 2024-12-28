@@ -157,7 +157,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
-			function( $array1, $array2 ) {
+			static function ( $array1, $array2 ) {
 				return \array_merge( $array2, $array1 );
 			}
 		);
@@ -223,7 +223,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->setValue( $this->control, 'attributes', $attributes );
 
 		Functions\expect( 'esc_attr' )->times( count( $attributes ) * 2 )->andReturnUsing(
-			function( $input ) {
+			static function ( $input ) {
 				return $input;
 			}
 		);

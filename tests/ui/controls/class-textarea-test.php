@@ -149,7 +149,7 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	 */
 	public function test_create(): void {
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
-			function( $array1, $array2 ) {
+			static function ( $array1, $array2 ) {
 				return \array_merge( $array2, $array1 );
 			}
 		);

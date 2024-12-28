@@ -68,7 +68,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 		parent::set_up();
 
 		Functions\expect( 'wp_parse_args' )->atLeast()->once()->andReturnUsing(
-			function( $array1, $array2 ) {
+			static function ( $array1, $array2 ) {
 				return \array_merge( $array2, $array1 );
 			}
 		);
