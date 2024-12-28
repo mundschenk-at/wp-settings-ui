@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -82,6 +82,6 @@ class Control_Factory_Test extends \Mundschenk\UI\Tests\TestCase {
 		$checkbox->shouldReceive( 'add_grouped_control' )->once()->with( m::type( \Mundschenk\UI\Select::class ) );
 
 		// Do it.
-		$this->assertInternalType( 'array', Control_Factory::initialize( $defaults, $options, $options_key ) );
+		$this->assertIsArray( Control_Factory::initialize( $defaults, $options, $options_key ) );
 	}
 }

@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -63,8 +63,8 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		// Set up virtual filesystem.
 		$filesystem = [
@@ -75,7 +75,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			],
 		];
 		vfsStream::setup( 'root', null, $filesystem );
-		set_include_path( 'vfs://root/' ); // @codingStandardsIgnoreLine
+		set_include_path( 'vfs://root/' );
 
 		// Mock Mundschenk\Data_Storage\Options instance.
 		$this->options = m::mock( Options::class )
@@ -118,18 +118,17 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->invokeMethod( $control, '__construct', $params, Abstract_Control::class );
 
-		$this->assertAttributeSame( 'id', 'id', $control );
-		$this->assertAttributeSame( 'tab_id', 'tab_id', $control );
-		$this->assertAttributeSame( 'section', 'section', $control );
-		$this->assertAttributeSame( 'default', 'default', $control );
-		$this->assertAttributeSame( 'short', 'short', $control );
-		$this->assertAttributeSame( 'label', 'label', $control );
-		$this->assertAttributeSame( 'help_text', 'help_text', $control );
-		$this->assertAttributeSame( true, 'inline_help', $control );
-		$this->assertAttributeSame( [ 'foo' => 'bar' ], 'attributes', $control );
-		$this->assertAttributeSame( [ 'bar' => 'foo' ], 'outer_attributes', $control );
-		$this->assertAttributeSame( [ 'test' => 'value' ], 'settings_args', $control );
-		$this->assertAttributeInternalType( 'string', 'base_path', $control );
+		$this->assert_attribute_same( 'id', 'id', $control );
+		$this->assert_attribute_same( 'tab_id', 'tab_id', $control );
+		$this->assert_attribute_same( 'section', 'section', $control );
+		$this->assert_attribute_same( 'default', 'default', $control );
+		$this->assert_attribute_same( 'short', 'short', $control );
+		$this->assert_attribute_same( 'label', 'label', $control );
+		$this->assert_attribute_same( 'help_text', 'help_text', $control );
+		$this->assert_attribute_same( true, 'inline_help', $control );
+		$this->assert_attribute_same( [ 'foo' => 'bar' ], 'attributes', $control );
+		$this->assert_attribute_same( [ 'bar' => 'foo' ], 'outer_attributes', $control );
+		$this->assert_attribute_same( [ 'test' => 'value' ], 'settings_args', $control );
 	}
 
 	/**
@@ -358,8 +357,8 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->control->add_grouped_control( $second_control );
 
-		$this->assertAttributeSame( $this->control, 'grouped_with', $second_control );
-		$this->assertAttributeContains( $second_control, 'grouped_controls', $this->control );
+		$this->assert_attribute_same( $this->control, 'grouped_with', $second_control );
+		$this->assert_attribute_contains( $second_control, 'grouped_controls', $this->control );
 	}
 
 	/**
@@ -371,8 +370,8 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->control->add_grouped_control( $this->control );
 
-		$this->assertAttributeNotSame( $this->control, 'grouped_with', $this->control );
-		$this->assertAttributeNotContains( $this->control, 'grouped_controls', $this->control );
+		$this->assertNotSame( $this->get_value( $this->control, 'grouped_with' ), $this->control );
+		$this->assert_attribute_not_contains( $this->control, 'grouped_controls', $this->control );
 	}
 
 	/**

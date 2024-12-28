@@ -29,7 +29,8 @@
         "szepeviktor/phpstan-wordpress": "^2.0.0-rc.2",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan-phpunit": "^2",
-        "phpstan/phpstan-mockery": "^2.0"
+        "phpstan/phpstan-mockery": "^2.0",
+        "mundschenk-at/phpunit-cross-version": "dev-master"
     },
 
     "autoload": {
