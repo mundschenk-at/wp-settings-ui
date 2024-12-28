@@ -48,16 +48,16 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Select
+	 * @var Select&m\MockInterface
 	 */
-	protected $select;
+	protected Select $select;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -67,7 +67,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 		parent::set_up();
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -103,7 +103,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Select::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$select = m::mock( Select::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -135,7 +135,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::set_option_values
 	 */
-	public function test_set_option_values() {
+	public function test_set_option_values(): void {
 		$option_values = [
 			'my',
 			'option',
@@ -152,7 +152,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value
 	 */
-	public function test_get_value() {
+	public function test_get_value(): void {
 		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn(
 			[
 				'foo'   => 'bar',
@@ -168,7 +168,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value
 	 */
-	public function test_get_value_unsuccessful() {
+	public function test_get_value_unsuccessful(): void {
 		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn(
 			[
 				'foo'   => 'bar',
@@ -184,7 +184,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_element_markup
 	 */
-	public function test_get_element_markup() {
+	public function test_get_element_markup(): void {
 		$option_count = count( $this->getValue( $this->select, 'option_values', Select::class ) );
 
 		Functions\expect( 'esc_html' )->times( $option_count )->with( m::type( 'string' ) )->andReturn( 'DISPLAY' );
@@ -194,7 +194,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->select->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
 		$this->select->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'ID_AND_CLASS' );
 
-		$this->assertRegExp( "#<select ID_AND_CLASS>(<option value=\"VALUE\" SELECTED>DISPLAY</option>){{$option_count}}</select>#", $this->invokeMethod( $this->select, 'get_element_markup' ) );
+		$this->assertMatchesRegularExpression( "#<select ID_AND_CLASS>(<option value=\"VALUE\" SELECTED>DISPLAY</option>){{$option_count}}</select>#", $this->invokeMethod( $this->select, 'get_element_markup' ) );
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
-	public function test_create() {
+	public function test_create(): void {
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
 			function( $array1, $array2 ) {
 				return \array_merge( $array2, $array1 );

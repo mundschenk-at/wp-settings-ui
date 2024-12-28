@@ -49,16 +49,16 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Textarea
+	 * @var Textarea&m\MockInterface
 	 */
-	protected $textarea;
+	protected Textarea $textarea;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -68,7 +68,7 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 		parent::set_up();
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -102,7 +102,7 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$textarea = m::mock( Textarea::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -132,7 +132,7 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_element_markup
 	 */
-	public function test_get_element_markup() {
+	public function test_get_element_markup(): void {
 		Functions\expect( 'esc_textarea' )->once()->with( 'value' )->andReturn( 'escaped_value' );
 		$this->textarea->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
 		$this->textarea->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'id="foo"' );
@@ -147,7 +147,7 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
-	public function test_create() {
+	public function test_create(): void {
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
 			function( $array1, $array2 ) {
 				return \array_merge( $array2, $array1 );

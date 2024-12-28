@@ -47,16 +47,16 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Input
+	 * @var Input&m\MockInterface
 	 */
-	protected $input;
+	protected Input $input;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -66,7 +66,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		parent::set_up();
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -101,7 +101,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$input = m::mock( Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -132,7 +132,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value_markup
 	 */
-	public function test_get_value_markup() {
+	public function test_get_value_markup(): void {
 		Functions\expect( 'esc_attr' )->once()->with( 'my_value' )->andReturn( 'my_escaped_value' );
 
 		$this->assertSame( 'value="my_escaped_value" ', $this->invokeMethod( $this->input, 'get_value_markup', [ 'my_value' ] ) );
@@ -144,7 +144,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_element_markup
 	 */
-	public function test_get_element_markup() {
+	public function test_get_element_markup(): void {
 		Functions\expect( 'esc_attr' )->once()->with( 'my_input_type' )->andReturn( 'escaped_input_type' );
 
 		$this->input->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
@@ -161,7 +161,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
-	public function test_create() {
+	public function test_create(): void {
 		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
 			function( $array1, $array2 ) {
 				return \array_merge( $array2, $array1 );

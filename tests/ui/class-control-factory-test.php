@@ -49,8 +49,12 @@ class Control_Factory_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_initialize() {
-		// Helper objects.
+	public function test_initialize(): void {
+		/**
+		 * Options mock.
+		 *
+		 * @var Options&m\MockInterface $options
+		 */
 		$options      = m::mock( Options::class );
 		$options_key  = 'my_options_key';
 		$number_input = m::mock( 'overload:' . \Mundschenk\UI\Number_Input::class );

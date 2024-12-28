@@ -45,16 +45,16 @@ class Hidden_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Hidden_Input
+	 * @var Hidden_Input&m\MockInterface
 	 */
-	protected $input;
+	protected Hidden_Input $input;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -66,7 +66,7 @@ class Hidden_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		Functions\when( 'wp_parse_args' )->alias( 'array_merge' );
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -81,7 +81,7 @@ class Hidden_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @uses \Mundschenk\UI\Abstract_Control::__construct
 	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$input = m::mock( Hidden_Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();

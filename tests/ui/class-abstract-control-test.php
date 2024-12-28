@@ -48,16 +48,16 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Abstract_Control
+	 * @var Abstract_Control&m\MockInterface
 	 */
-	protected $control;
+	protected Abstract_Control $control;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -75,10 +75,10 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			],
 		];
 		vfsStream::setup( 'root', null, $filesystem );
-		set_include_path( 'vfs://root/' );
+		set_include_path( 'vfs://root/' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_set_include_path
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -95,7 +95,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$control = m::mock( Abstract_Control::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -136,7 +136,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::prepare_args
 	 */
-	public function test_prepare_args() {
+	public function test_prepare_args(): void {
 		$input = [
 			'foo'    => 'bar',
 			'tab_id' => 'my_tab',
@@ -174,7 +174,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value
 	 */
-	public function test_get_value() {
+	public function test_get_value(): void {
 		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn( [ 'foo' => 'bar' ] );
 		$this->setValue( $this->control, 'id', 'foo' );
 
@@ -186,7 +186,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value
 	 */
-	public function test_get_value_empty_options_key() {
+	public function test_get_value_empty_options_key(): void {
 		$this->setValue( $this->control, 'options_key', '', Abstract_Control::class );
 		$this->setValue( $this->control, 'id', 'foo', Abstract_Control::class );
 
@@ -200,7 +200,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::render_element
 	 */
-	public function test_render_element() {
+	public function test_render_element(): void {
 		$this->control->shouldReceive( 'get_element_markup' )->once()->andReturn( '<foo>' );
 		$this->expectOutputString( '<foo>' );
 
@@ -215,7 +215,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses ::get_inner_html_attributes
 	 */
-	public function test_get_inner_html_attributes() {
+	public function test_get_inner_html_attributes(): void {
 		$attributes = [
 			'foo' => 'bar',
 			'rel' => 'self',
@@ -236,7 +236,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_default
 	 */
-	public function test_get_default() {
+	public function test_get_default(): void {
 		$this->assertSame( 'default', $this->control->get_default() );
 	}
 
@@ -245,7 +245,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_id
 	 */
-	public function test_get_id() {
+	public function test_get_id(): void {
 		$this->options->shouldReceive( 'get_name' )->once()->with( 'options_key' )->andReturn( 'typo_configuration' );
 
 		$this->assertSame( 'typo_configuration[id]', $this->control->get_id() );
@@ -256,7 +256,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_id
 	 */
-	public function test_get_id_empty_options_iey() {
+	public function test_get_id_empty_options_iey(): void {
 		$this->setValue( $this->control, 'options_key', '', Abstract_Control::class );
 
 		$this->options->shouldReceive( 'get_name' )->once()->with( 'id' )->andReturn( 'foobar' );
@@ -271,7 +271,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses ::get_inner_html_attributes
 	 */
-	public function test_get_id_and_class_markup() {
+	public function test_get_id_and_class_markup(): void {
 		Functions\expect( 'esc_attr' )->once()->with( 'foo[bar]' )->andReturn( 'foo[bar]' );
 
 		$this->control->shouldReceive( 'get_id' )->once()->andReturn( 'foo[bar]' );
@@ -285,7 +285,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::label_has_placeholder
 	 */
-	public function test_label_has_placeholder() {
+	public function test_label_has_placeholder(): void {
 		$this->setValue( $this->control, 'label', 'My label' );
 		$this->assertFalse( $this->invokeMethod( $this->control, 'label_has_placeholder' ) );
 
@@ -298,7 +298,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::has_inline_help
 	 */
-	public function test_has_inline_help() {
+	public function test_has_inline_help(): void {
 		$this->assertTrue( $this->invokeMethod( $this->control, 'has_inline_help' ) );
 
 		$this->setValue( $this->control, 'help_text', false );
@@ -310,7 +310,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_label
 	 */
-	public function test_get_label_with_placeholder() {
+	public function test_get_label_with_placeholder(): void {
 		$this->setValue( $this->control, 'label', 'My %1$s label' );
 
 		$this->control->shouldReceive( 'label_has_placeholder' )->once()->andReturn( true );
@@ -324,7 +324,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_label
 	 */
-	public function test_get_label_no_placeholder() {
+	public function test_get_label_no_placeholder(): void {
 		$this->control->shouldReceive( 'label_has_placeholder' )->once()->andReturn( false );
 		$this->control->shouldReceive( 'get_element_markup' )->never();
 
@@ -336,7 +336,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::register
 	 */
-	public function test_register() {
+	public function test_register(): void {
 		$this->control->shouldReceive( 'get_id' )->once()->andReturn( 'id' );
 		Functions\expect( 'add_settings_field' )->once()->with( 'id', 'short', [ $this->control, 'render' ], 'option_group_tab_id', 'section', [ 'my' => 'settings_arg' ] );
 
@@ -350,7 +350,12 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses ::group_with
 	 */
-	public function test_add_grouped_control() {
+	public function test_add_grouped_control(): void {
+		/**
+		 * Control mock.
+		 *
+		 * @var Abstract_Control&m\MockInterface $second_control
+		 */
 		$second_control = m::mock( Abstract_Control::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -366,7 +371,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::add_grouped_control
 	 */
-	public function test_add_grouped_control_failure() {
+	public function test_add_grouped_control_failure(): void {
 
 		$this->control->add_grouped_control( $this->control );
 
@@ -379,7 +384,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::render
 	 */
-	public function test_render() {
+	public function test_render(): void {
 		$this->setValue( $this->control, 'base_path', 'plugin' );
 
 		$this->expectOutputString( 'CONTROL' );

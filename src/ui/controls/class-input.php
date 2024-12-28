@@ -129,11 +129,11 @@ abstract class Input extends Abstract_Control {
 	 *    @type array       $attributes    Optional. Default [],
 	 * }
 	 *
-	 * @return Control
+	 * @return static
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
 	 */
-	public static function create( Options $options, $options_key, $id, array $args ) {
+	public static function create( Options $options, ?string $options_key, string $id, array $args ) {
 		return new static( $options, $options_key, $id, $args );
 	}
 }

@@ -50,16 +50,16 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Submit_Input
+	 * @var Submit_Input&m\MockInterface
 	 */
-	protected $input;
+	protected Submit_Input $input;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -71,7 +71,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		Functions\when( 'wp_parse_args' )->alias( 'array_merge' );
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -104,7 +104,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$input = m::mock( Submit_Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -137,7 +137,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @uses \Mundschenk\UI\Abstract_Control::get_inner_html_attributes
 	 * @uses \Mundschenk\UI\Abstract_Control::get_id_and_class_markup
 	 */
-	public function test_get_id_and_class_markup() {
+	public function test_get_id_and_class_markup(): void {
 		Functions\expect( 'esc_attr' )->once()->with( 'my_id' )->andReturn( 'my_escaped_id' );
 		Functions\expect( 'esc_attr' )->once()->with( 'my_class' )->andReturn( 'my_escaped_class' );
 
@@ -152,7 +152,7 @@ class Submit_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value
 	 */
-	public function test_get_value() {
+	public function test_get_value(): void {
 		$this->assertSame( 'my_label', $this->input->get_value() );
 	}
 }

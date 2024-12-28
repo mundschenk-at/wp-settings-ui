@@ -49,16 +49,16 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Display_Text
+	 * @var Display_Text&m\MockInterface
 	 */
-	protected $display_text;
+	protected Display_Text $display_text;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -74,7 +74,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 		);
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -110,7 +110,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$display_text = m::mock( Display_Text::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -139,7 +139,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_element_markup
 	 */
-	public function test_get_element_markup() {
+	public function test_get_element_markup(): void {
 		Functions\expect( 'wp_kses' )->once()->with( '<foo>Foo</foo><bar/>', m::type( 'array' ) )->andReturn( 'escaped_value' );
 
 		$this->assertSame( 'escaped_value', $this->invokeMethod( $this->display_text, 'get_element_markup' ) );
@@ -150,7 +150,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value
 	 */
-	public function test_get_value() {
+	public function test_get_value(): void {
 		$this->assertSame( '', $this->display_text->get_value() );
 	}
 
@@ -161,7 +161,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
 	 */
-	public function test_create() {
+	public function test_create(): void {
 		$args = [
 			'tab_id'        => 'foo',
 			'elements'      => [],
