@@ -68,7 +68,7 @@ class Select extends Abstract_Control {
 	 */
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args                = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
-		$sanitize            = $args['sanitize_callback'] ?: 'sanitize_text_field';
+		$sanitize            = $args['sanitize_callback'] ?? 'sanitize_text_field';
 		$this->option_values = $args['option_values'];
 
 		parent::__construct(
