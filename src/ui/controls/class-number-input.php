@@ -59,7 +59,7 @@ class Number_Input extends Input {
 	 */
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args['input_type']        = 'number';
-		$args['sanitize_callback'] = function( $value ) {
+		$args['sanitize_callback'] = static function ( $value ) {
 			return $value + 0;
 		};
 

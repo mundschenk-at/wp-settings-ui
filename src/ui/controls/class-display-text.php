@@ -94,7 +94,7 @@ class Display_Text extends Abstract_Control {
 	protected function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args           = $this->prepare_args( $args, [ 'elements' ] );
 		$this->elements = $args['elements'];
-		$sanitize       = function() {
+		$sanitize       = static function () {
 			return '';
 		};
 
