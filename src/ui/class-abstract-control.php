@@ -274,7 +274,7 @@ abstract class Abstract_Control implements Control {
 
 		foreach ( $required as $property ) {
 			if ( ! isset( $args[ $property ] ) ) {
-				throw new \InvalidArgumentException( "Missing argument '$property'." );
+				throw new \InvalidArgumentException( \esc_html( "Missing argument '{$property}'." ) );
 			}
 		}
 
