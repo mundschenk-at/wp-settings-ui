@@ -187,7 +187,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_value
 	 */
 	public function test_get_value_empty_options_key(): void {
-		$this->setValue( $this->control, 'options_key', '', Abstract_Control::class );
+		$this->setValue( $this->control, 'options_key', null, Abstract_Control::class );
 		$this->setValue( $this->control, 'id', 'foo', Abstract_Control::class );
 
 		$this->options->shouldReceive( 'get' )->once()->with( 'foo' )->andReturn( 'bar' );

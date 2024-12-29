@@ -47,7 +47,7 @@ abstract class Input extends Abstract_Control {
 	 * Create a new input control object.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -65,7 +65,7 @@ abstract class Input extends Abstract_Control {
 	 *    @type array       $settings_args    Optional. Default [],
 	 * }
 	 */
-	protected function __construct( Options $options, $options_key, $id, array $args ) {
+	protected function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args             = $this->prepare_args( $args, [ 'input_type', 'tab_id', 'default' ] );
 		$this->input_type = $args['input_type'];
 		$sanitize         = isset( $args['sanitize_callback'] ) ? $args['sanitize_callback'] : 'sanitize_text_field';
@@ -95,16 +95,16 @@ abstract class Input extends Abstract_Control {
 	 *
 	 * @return string
 	 */
-	protected function get_value_markup( $value ) {
+	protected function get_value_markup( $value ): string {
 		return $value ? 'value="' . \esc_attr( $value ) . '" ' : '';
 	}
 
 	/**
 	 * Retrieves the control-specific HTML markup.
 	 *
-	 * @var string
+	 * @return string
 	 */
-	protected function get_element_markup() {
+	protected function get_element_markup(): string {
 		return '<input type="' . \esc_attr( $this->input_type ) . '" ' . "{$this->get_id_and_class_markup()} {$this->get_value_markup( $this->get_value() )}/>";
 	}
 
@@ -113,7 +113,7 @@ abstract class Input extends Abstract_Control {
 	 * this methods signature.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.

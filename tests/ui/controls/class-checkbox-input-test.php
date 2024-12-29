@@ -91,6 +91,8 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'attributes'  => [ 'foo' => 'bar' ],
 		];
 
+		Functions\when( 'sanitize_text_field' )->returnArg();
+
 		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Checkbox_Input::class );
 	}
 

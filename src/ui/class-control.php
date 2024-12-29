@@ -44,7 +44,7 @@ interface Control {
 	/**
 	 * Render the HTML representation of the control.
 	 */
-	public function render();
+	public function render(): void;
 
 	/**
 	 * Retrieve default value.
@@ -58,36 +58,36 @@ interface Control {
 	 *
 	 * @return string
 	 */
-	public function get_id();
+	public function get_id(): string;
 
 	/**
 	 * Retrieves the label. If the label text contains a string placeholder, it
 	 * is replaced by the control element markup.
 	 *
-	 * @var string
+	 * @return string
 	 */
-	public function get_label();
+	public function get_label(): string;
 
 	/**
 	 * Register the control with the settings API.
 	 *
 	 * @param string $option_group Application-specific prefix.
 	 */
-	public function register( $option_group );
+	public function register( string $option_group ): void;
 
 	/**
 	 * Groups another control with this one.
 	 *
 	 * @param Control $control Any control.
 	 */
-	public function add_grouped_control( Control $control );
+	public function add_grouped_control( Control $control ): void;
 
 	/**
 	 * Registers this control as grouped with another one.
 	 *
 	 * @param Control $control Any control.
 	 */
-	public function group_with( Control $control );
+	public function group_with( Control $control ): void;
 
 	/**
 	 * Sanitizes an option value.
@@ -102,7 +102,7 @@ interface Control {
 	 * Creates a new control.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.

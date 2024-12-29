@@ -93,6 +93,8 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->select->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default', 'option_values' ] )->andReturn( $args );
 
+		Functions\when( 'my_sanitize_function' )->returnArg();
+
 		$this->invokeMethod( $this->select, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Select::class );
 	}
 
@@ -124,6 +126,8 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		$select->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default', 'option_values' ] )->andReturn( $args );
+
+		Functions\when( 'my_sanitize_function' )->returnArg();
 
 		$this->invokeMethod( $select, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Select::class );
 

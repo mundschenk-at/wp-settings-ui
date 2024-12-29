@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2018 Peter Putzer.
+ *  Copyright 2018-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -75,7 +75,7 @@ class Display_Text extends Abstract_Control {
 	 * Create a new input control object.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -91,7 +91,7 @@ class Display_Text extends Abstract_Control {
 	 *    @type array       $settings_args    Optional. Default [],
 	 * }
 	 */
-	protected function __construct( Options $options, $options_key, $id, array $args ) {
+	protected function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args           = $this->prepare_args( $args, [ 'elements' ] );
 		$this->elements = $args['elements'];
 		$sanitize       = function() {
@@ -121,7 +121,7 @@ class Display_Text extends Abstract_Control {
 	 *
 	 * @return string
 	 */
-	public function get_value() {
+	public function get_value(): string {
 		return '';
 	}
 
@@ -130,7 +130,7 @@ class Display_Text extends Abstract_Control {
 	 *
 	 * @var string
 	 */
-	protected function get_element_markup() {
+	protected function get_element_markup(): string {
 		return \wp_kses( \implode( '', $this->elements ), self::ALLOWED_HTML );
 	}
 
@@ -139,7 +139,7 @@ class Display_Text extends Abstract_Control {
 	 * this methods signature.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.

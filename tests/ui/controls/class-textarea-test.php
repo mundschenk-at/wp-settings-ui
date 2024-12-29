@@ -90,6 +90,7 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 			'settings_args'    => [],
 		];
 
+		Functions\when( 'sanitize_textarea_field' )->returnArg();
 		$this->textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
 
 		$this->invokeMethod( $this->textarea, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Textarea::class );
@@ -120,6 +121,7 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 			'settings_args'    => [],
 		];
 
+		Functions\when( 'sanitize_textarea_field' )->returnArg();
 		$textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
 
 		$this->invokeMethod( $textarea, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Textarea::class );

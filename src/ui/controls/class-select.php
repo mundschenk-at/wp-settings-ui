@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -40,13 +40,13 @@ class Select extends Abstract_Control {
 	 *
 	 * @var array
 	 */
-	protected $option_values;
+	protected array $option_values;
 
 	/**
 	 * Create a new select control object.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -66,7 +66,7 @@ class Select extends Abstract_Control {
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
 	 */
-	public function __construct( Options $options, $options_key, $id, array $args ) {
+	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args                = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
 		$sanitize            = $args['sanitize_callback'] ?: 'sanitize_text_field';
 		$this->option_values = $args['option_values'];
@@ -94,7 +94,7 @@ class Select extends Abstract_Control {
 	 *
 	 * @param array $option_values An array of VALUE => DISPLAY.
 	 */
-	public function set_option_values( array $option_values ) {
+	public function set_option_values( array $option_values ): void {
 		$this->option_values = $option_values;
 	}
 
@@ -120,7 +120,7 @@ class Select extends Abstract_Control {
 	 *
 	 * @return string
 	 */
-	protected function get_element_markup() {
+	protected function get_element_markup(): string {
 		$select_markup = "<select {$this->get_id_and_class_markup()}>";
 		$value         = $this->get_value();
 
@@ -139,7 +139,7 @@ class Select extends Abstract_Control {
 	 *
 	 * @return string       The sanitized value.
 	 */
-	public function sanitize_value( $value ) {
+	public function sanitize_value( $value ): string {
 		return \sanitize_text_field( $value );
 	}
 
@@ -147,7 +147,7 @@ class Select extends Abstract_Control {
 	 * Creates a new select control
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.

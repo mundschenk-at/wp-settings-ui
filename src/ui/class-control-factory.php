@@ -55,7 +55,7 @@ abstract class Control_Factory {
 	 *         @type Control $id A control object.
 	 * }
 	 */
-	public static function initialize( array $defaults, Options $options, $options_key ) {
+	public static function initialize( array $defaults, Options $options, string $options_key ): array {
 
 		// Create controls from default configuration.
 		$controls = [];
