@@ -207,12 +207,14 @@ abstract class Abstract_Control implements Control {
 	/**
 	 * Create a new UI control object.
 	 *
+	 * @since 2024.12 Parameter `$default` renamed to `$default_value`.
+	 *
 	 * @param Options    $options           Options API handler.
 	 * @param ?string    $options_key       Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string     $id                Control ID (equivalent to option name). Required.
 	 * @param string     $tab_id            Tab ID. Required.
 	 * @param string     $section           Section ID. Required.
-	 * @param string|int $default           The default value. Required, but may be an empty string.
+	 * @param string|int $default_value     The default value. Required, but may be an empty string.
 	 * @param ?string    $short             Optional. Short label. Default null.
 	 * @param ?string    $label             Optional. Label content with the position of the control marked as %1$s. Default null.
 	 * @param ?string    $help_text         Optional. Help text. Default null.
@@ -228,7 +230,7 @@ abstract class Abstract_Control implements Control {
 		string $id,
 		string $tab_id,
 		string $section,
-		$default,
+		$default_value,
 		?string $short = null,
 		?string $label = null,
 		?string $help_text = null,
@@ -247,7 +249,7 @@ abstract class Abstract_Control implements Control {
 		$this->label             = $label;
 		$this->help_text         = $help_text;
 		$this->inline_help       = $inline_help;
-		$this->default           = $default;
+		$this->default           = $default_value;
 		$this->attributes        = $attributes;
 		$this->outer_attributes  = $outer_attributes;
 		$this->settings_args     = $settings_args;
