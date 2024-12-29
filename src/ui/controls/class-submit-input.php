@@ -26,8 +26,6 @@
 
 namespace Mundschenk\UI\Controls;
 
-use Mundschenk\UI\Control;
-
 use Mundschenk\Data_Storage\Options;
 
 /**
