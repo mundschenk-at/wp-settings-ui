@@ -284,7 +284,7 @@ abstract class Abstract_Control implements Control {
 	}
 
 	/**
-	 * Prepares keyowrd arguments passed via an array for usage.
+	 * Prepares keyword arguments passed via an array for usage.
 	 *
 	 * @param array $args     Arguments.
 	 * @param array $required Required argument names. 'tab_id' is always required.

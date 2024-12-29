@@ -112,7 +112,7 @@ class Submit_Input extends Input {
 		$this->button_label = $args['label'];
 		$args['label']      = null;
 
-		// Force these addtional arguments.
+		// Force these additional arguments.
 		$args['input_type'] = 'submit';
 
 		// Store button class attribute.
