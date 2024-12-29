@@ -30,6 +30,8 @@ use Mundschenk\Data_Storage\Options;
 
 /**
  * HTML <input> element.
+ *
+ * @phpstan-import-type Control_Arguments from \Mundschenk\UI\Control
  */
 class Checkbox_Input extends Input {
 
@@ -54,6 +56,8 @@ class Checkbox_Input extends Input {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Control_Arguments $args
 	 */
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args['input_type']        = 'checkbox';

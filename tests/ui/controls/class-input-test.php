@@ -169,8 +169,9 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		);
 
 		$args = [
-			'tab_id'  => 'foo',
-			'default' => 'bar',
+			'input_type' => 'dummy',
+			'tab_id'     => 'foo',
+			'default'    => 'bar',
 		];
 
 		$this->assertInstanceOf( Input::class, Dummy_Input::create( $this->options, 'my_options', 'my_control_id', $args ) );

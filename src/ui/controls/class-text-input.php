@@ -30,6 +30,8 @@ use Mundschenk\Data_Storage\Options;
 
 /**
  * HTML <input> element.
+ *
+ * @phpstan-import-type Input_Arguments from Input
  */
 class Text_Input extends Input {
 
@@ -54,6 +56,8 @@ class Text_Input extends Input {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Input_Arguments $args
 	 */
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args['input_type'] = 'text';

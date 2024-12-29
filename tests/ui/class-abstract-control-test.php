@@ -340,7 +340,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->control->shouldReceive( 'get_id' )->once()->andReturn( 'id' );
 		Functions\expect( 'add_settings_field' )->once()->with( 'id', 'short', [ $this->control, 'render' ], 'option_group_tab_id', 'section', [ 'my' => 'settings_arg' ] );
 
-		$this->assertNull( $this->control->register( 'option_group_' ) );
+		$this->control->register( 'option_group_' );
 	}
 
 	/**

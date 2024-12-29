@@ -54,6 +54,10 @@ abstract class Control_Factory {
 	 *
 	 *         @type Control $id A control object.
 	 * }
+	 *
+	 * @phpstan-param array<string,mixed> $defaults
+	 *
+	 * @phpstan-return array<string,Control>
 	 */
 	public static function initialize( array $defaults, Options $options, string $options_key ): array {
 

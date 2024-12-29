@@ -32,12 +32,43 @@ use Mundschenk\Data_Storage\Options;
 
 /**
  * HTML <select> element.
+ *
+ * @phpstan-import-type Input_Arguments from Input
+ * @phpstan-type Select_Arguments array{
+ *     tab_id: string,
+ *     section?: string,
+ *     default: string|int,
+ *     option_values: string[],
+ *     short?: ?string,
+ *     label?: ?string,
+ *     help_text?: ?string,
+ *     inline_help?: bool,
+ *     attributes?: array<string,string>,
+ *     outer_attributes?: array<string,string>,
+ *     settings_args?: array<string,string>
+ * }
+ * @phpstan-type Complete_Select_Arguments array{
+ *     tab_id: string,
+ *     section?: string,
+ *     default: string|int,
+ *     option_values: string[],
+ *     tab_id: string,
+ *     section: string,
+ *     short: ?string,
+ *     label: ?string,
+ *     help_text: ?string,
+ *     inline_help: bool,
+ *     attributes: array<string,string>,
+ *     outer_attributes: array<string,string>,
+ *     settings_args: array<string,string>,
+ *     sanitize_callback: ?callable,
+ * }
  */
 class Select extends Abstract_Control {
 	/**
 	 * The selectable values.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected array $option_values;
 
@@ -64,8 +95,15 @@ class Select extends Abstract_Control {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Select_Arguments $args
 	 */
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
+		/**
+		 * Fill in missing mandatory arguments.
+		 *
+		 * @phpstan-var Complete_Select_Arguments $args
+		 */
 		$args                = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
 		$sanitize            = $args['sanitize_callback'] ?? 'sanitize_text_field';
 		$this->option_values = $args['option_values'];
@@ -91,7 +129,7 @@ class Select extends Abstract_Control {
 	/**
 	 * Set selectable options.
 	 *
-	 * @param array $option_values An array of VALUE => DISPLAY.
+	 * @param string[] $option_values An array of VALUE => DISPLAY.
 	 */
 	public function set_option_values( array $option_values ): void {
 		$this->option_values = $option_values;
@@ -154,7 +192,7 @@ class Select extends Abstract_Control {
 	 *    @type string      $tab_id        Tab ID. Required.
 	 *    @type string      $section       Section ID. Required.
 	 *    @type string|int  $default       The default value. Required, but may be an empty string.
-	 *    @type array       $option_values The allowed values. Required.
+	 *    @type string[]    $option_values The allowed values. Required.
 	 *    @type string|null $short         Optional. Short label. Default null.
 	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
 	 *    @type string|null $help_text     Optional. Help text. Default null.
@@ -165,6 +203,8 @@ class Select extends Abstract_Control {
 	 * @return static
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Select_Arguments $args
 	 */
 	public static function create( Options $options, ?string $options_key, string $id, array $args ) {
 		return new static( $options, $options_key, $id, $args );

@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2018 Peter Putzer.
+ *  Copyright 2018-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -30,6 +30,8 @@ use Mundschenk\Data_Storage\Options;
 
 /**
  * An interface for HTML controls.
+ *
+ * @phpstan-type Control_Arguments array{tab_id:string, section:string, default:string|int, option_values:string[], short?:?string, label?:?string, help_text?:?string, inline_help?:bool, attributes?:array<string,string> }
  */
 interface Control {
 
@@ -121,6 +123,8 @@ interface Control {
 	 * @return static
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Control_Arguments $args
 	 */
 	public static function create( Options $options, ?string $options_key, string $id, array $args );
 }

@@ -25,7 +25,6 @@
 namespace Mundschenk\UI\Controls\Tests;
 
 use Mundschenk\UI\Controls\Display_Text;
-use Mundschenk\UI\Controls\Input;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;

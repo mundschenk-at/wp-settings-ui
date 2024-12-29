@@ -30,6 +30,20 @@ use Mundschenk\Data_Storage\Options;
 
 /**
  * Abstract base class for HTML controls.
+ *
+ * @phpstan-type Prepared_Arguments array{
+ *    tab_id: string,
+ *    section: string,
+ *    short: ?string,
+ *    label: ?string,
+ *    help_text: ?string,
+ *    inline_help: bool,
+ *    attributes: array<string,string>,
+ *    outer_attributes: array<string,string>,
+ *    settings_args: array<string,string>,
+ *    sanitize_callback: ?callable,
+ *    ...<string,mixed>
+ * }
  */
 abstract class Abstract_Control implements Control {
 
@@ -97,6 +111,8 @@ abstract class Abstract_Control implements Control {
 	 *
 	 *      string $attr Attribute value.
 	 * }
+	 *
+	 * @phpstan-var array<string,string>
 	 */
 	protected array $attributes;
 
@@ -108,6 +124,8 @@ abstract class Abstract_Control implements Control {
 	 *
 	 *      string $attr Attribute value.
 	 * }
+	 *
+	 * @phpstan-var array<string,string>
 	 */
 	protected array $outer_attributes;
 
@@ -119,6 +137,8 @@ abstract class Abstract_Control implements Control {
 	 *
 	 *      Control $control Grouped control.
 	 * }
+	 *
+	 * @phpstan-var Control[]
 	 */
 	protected array $grouped_controls = [];
 
@@ -158,6 +178,8 @@ abstract class Abstract_Control implements Control {
 	 *
 	 *      string $attr Attribute value.
 	 * }
+	 *
+	 * @phpstan-var array<string,string>
 	 */
 	protected array $settings_args;
 
@@ -221,8 +243,12 @@ abstract class Abstract_Control implements Control {
 	 * @param bool       $inline_help       Optional. Display help inline. Default false.
 	 * @param array      $attributes        Optional. Attributes for the main element of the control. Default [].
 	 * @param array      $outer_attributes  Optional. Attributes for the outer element (´<fieldset>` or `<div>`) of the control. Default [].
-	 * @param array      $settings_args     Optional. Arguments passed to `add_settings_Field`. Default [].
+	 * @param array      $settings_args     Optional. Arguments passed to `add_settings_field`. Default [].
 	 * @param ?callable  $sanitize_callback Optional. A callback to sanitize $_POST data. Default null.
+	 *
+	 * @phpstan-param array<string,string> $attributes
+	 * @phpstan-param array<string,string> $outer_attributes
+	 * @phpstan-param array<string,string> $settings_args
 	 */
 	protected function __construct(
 		Options $options,
@@ -266,6 +292,11 @@ abstract class Abstract_Control implements Control {
 	 * @return array
 	 *
 	 * @throws \InvalidArgumentException Thrown when a required argument is missing.
+	 *
+	 * @phpstan-param array<string,mixed> $args
+	 * @phpstan-param string[] $required
+	 *
+	 * @phpstan-return Prepared_Arguments&array<string,mixed>
 	 */
 	protected function prepare_args( array $args, array $required ): array {
 
@@ -290,7 +321,13 @@ abstract class Abstract_Control implements Control {
 			'settings_args'     => [],
 			'sanitize_callback' => null,
 		];
-		$args     = \wp_parse_args( $args, $defaults );
+
+		/**
+		 * Merge defaults into the arguments.
+		 *
+		 * @phpstan-var Prepared_Arguments $args
+		 */
+		$args = \wp_parse_args( $args, $defaults );
 
 		return $args;
 	}
@@ -343,6 +380,8 @@ abstract class Abstract_Control implements Control {
 	 * @param array $attributes Required.
 	 *
 	 * @return string
+	 *
+	 * @phpstan-param array<string,string> $attributes
 	 */
 	protected function get_html_attributes( array $attributes ): string {
 		$html_attributes = '';

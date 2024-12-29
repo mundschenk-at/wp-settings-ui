@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2018 Peter Putzer.
+ *  Copyright 2018-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -53,6 +53,8 @@ class Dummy_Input extends Input {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param array{ tab_id:string, section?:string, default:string|int, short?:?string, attributes?:string[], outer_attributes?:string[] } $args
 	 */
 	public function __construct( Options $options, $options_key, $id, array $args ) {
 		$args['input_type'] = 'dummy';

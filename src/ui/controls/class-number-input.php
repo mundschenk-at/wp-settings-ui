@@ -29,7 +29,9 @@ namespace Mundschenk\UI\Controls;
 use Mundschenk\Data_Storage\Options;
 
 /**
- * HTML <input> element.
+ * HTML numeric <input> element.
+ *
+ * @phpstan-import-type Input_Arguments from Input
  */
 class Number_Input extends Input {
 
@@ -54,6 +56,8 @@ class Number_Input extends Input {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Input_Arguments $args
 	 */
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args['input_type']        = 'number';

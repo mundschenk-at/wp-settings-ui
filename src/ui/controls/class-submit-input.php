@@ -29,7 +29,39 @@ namespace Mundschenk\UI\Controls;
 use Mundschenk\Data_Storage\Options;
 
 /**
- * HTML <input> element.
+ * HTML submit <input> element.
+ *
+ * @phpstan-import-type Input_Arguments from Input
+ * @phpstan-type Submit_Arguments array{
+ *     tab_id: string,
+ *     section: string,
+ *     default: string|int,
+ *     button_class: string,
+ *     short?: ?string,
+ *     label: ?string,
+ *     help_text?: ?string,
+ *     inline_help?: bool,
+ *     attributes?: array<string,string>,
+ *     outer_attributes?: array<string,string>,
+ *     settings_args?: array<string,string>
+ * }
+ * @phpstan-type Complete_Submit_Arguments array{
+ *     input_type: string,
+ *     tab_id: string,
+ *     section?: string,
+ *     default: string|int,
+ *     button_class: string,
+ *     tab_id: string,
+ *     section: string,
+ *     short: ?string,
+ *     label: ?string,
+ *     help_text: ?string,
+ *     inline_help: bool,
+ *     attributes: array<string,string>,
+ *     outer_attributes: array<string,string>,
+ *     settings_args: array<string,string>,
+ *     sanitize_callback: ?callable,
+ * }
  */
 class Submit_Input extends Input {
 	/**
@@ -65,9 +97,15 @@ class Submit_Input extends Input {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Submit_Arguments $args
 	 */
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
-		// Ensure that there is a button class argument.
+		/**
+		 * Ensure that there is a button class argument.
+		 *
+		 * @phpstan-var Complete_Submit_Arguments $args
+		 */
 		$args = $this->prepare_args( $args, [ 'button_class' ] );
 
 		// Ensure proper button label handling.

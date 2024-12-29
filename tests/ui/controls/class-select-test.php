@@ -218,7 +218,7 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 		$args = [
 			'tab_id'        => 'foo',
 			'default'       => 'bar',
-			'option_values' => [ 1, 2 ],
+			'option_values' => [ '1', '2' ],
 		];
 		$this->assertInstanceOf( Select::class, Select::create( $this->options, 'my_options', 'my_control_id', $args ) );
 	}

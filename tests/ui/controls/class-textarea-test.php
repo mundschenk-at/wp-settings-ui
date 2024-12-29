@@ -125,8 +125,6 @@ class Textarea_Test extends \Mundschenk\UI\Tests\TestCase {
 		$textarea->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default' ] )->andReturn( $args );
 
 		$this->invokeMethod( $textarea, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Textarea::class );
-
-		$this->assertInstanceOf( Textarea::class, $textarea );
 	}
 
 	/**
