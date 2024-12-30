@@ -31,9 +31,45 @@ use Mundschenk\Data_Storage\Options;
 /**
  * An interface for HTML controls.
  *
- * @phpstan-type Control_Arguments array{tab_id:string, section:string, default:string|int, option_values:string[], short?:?string, label?:?string, help_text?:?string, inline_help?:bool, attributes?:array<string,string> }
+ * @phpstan-type Control_Arguments array{
+ *     tab_id: string,
+ *     section: string,
+ *     default: string|int,
+ *     option_values?: string[],
+ *     short?: ?string,
+ *     label?: ?string,
+ *     help_text?: ?string,
+ *     inline_help?: bool,
+ *     attributes?: array<string,string>
+ * }
  */
 interface Control {
+
+	/**
+	 * Creates a new control.
+	 *
+	 * @param Options $options      Options API handler.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
+	 * @param string  $id           Control ID (equivalent to option name). Required.
+	 * @param array   $args {
+	 *    Optional and required arguments.
+	 *
+	 *    @type string      $tab_id        Tab ID. Required.
+	 *    @type string      $section       Section ID. Required.
+	 *    @type string|int  $default       The default value. Required, but may be an empty string.
+	 *    @type array       $option_values The allowed values. Required.
+	 *    @type string|null $short         Optional. Short label. Default null.
+	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
+	 *    @type string|null $help_text     Optional. Help text. Default null.
+	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
+	 *    @type array       $attributes    Optional. Default [],
+	 * }
+	 *
+	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Control_Arguments $args
+	 */
+	public function __construct( Options $options, ?string $options_key, string $id, array $args );
 
 	/**
 	 * Retrieve the current value for the control.
@@ -99,32 +135,4 @@ interface Control {
 	 * @return mixed        The sanitized value.
 	 */
 	public function sanitize( $value );
-
-	/**
-	 * Creates a new control.
-	 *
-	 * @param Options $options      Options API handler.
-	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
-	 * @param string  $id           Control ID (equivalent to option name). Required.
-	 * @param array   $args {
-	 *    Optional and required arguments.
-	 *
-	 *    @type string      $tab_id        Tab ID. Required.
-	 *    @type string      $section       Section ID. Required.
-	 *    @type string|int  $default       The default value. Required, but may be an empty string.
-	 *    @type array       $option_values The allowed values. Required.
-	 *    @type string|null $short         Optional. Short label. Default null.
-	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text     Optional. Help text. Default null.
-	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
-	 *    @type array       $attributes    Optional. Default [],
-	 * }
-	 *
-	 * @return static
-	 *
-	 * @throws \InvalidArgumentException Missing argument.
-	 *
-	 * @phpstan-param Control_Arguments $args
-	 */
-	public static function create( Options $options, ?string $options_key, string $id, array $args );
 }

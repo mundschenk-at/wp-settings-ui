@@ -31,12 +31,14 @@ use Mundschenk\Data_Storage\Options;
 /**
  * Abstract base class for HTML controls.
  *
+ * @phpstan-import-type Control_Arguments from Control
  * @phpstan-type Prepared_Arguments array{
  *    tab_id: string,
  *    section: string,
  *    short: ?string,
  *    label: ?string,
  *    help_text: ?string,
+ *    default: string,
  *    inline_help: bool,
  *    attributes: array<string,string>,
  *    outer_attributes: array<string,string>,
@@ -250,36 +252,48 @@ abstract class Abstract_Control implements Control {
 	 * @phpstan-param array<string,string> $outer_attributes
 	 * @phpstan-param array<string,string> $settings_args
 	 */
-	protected function __construct(
-		Options $options,
-		?string $options_key,
-		string $id,
-		string $tab_id,
-		string $section,
-		$default_value,
-		?string $short = null,
-		?string $label = null,
-		?string $help_text = null,
-		bool $inline_help = false,
-		array $attributes = [],
-		array $outer_attributes = [],
-		array $settings_args = [],
-		?callable $sanitize_callback = null
-	) {
+
+	/**
+	 * Creates a new control.
+	 *
+	 * @param Options $options      Options API handler.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
+	 * @param string  $id           Control ID (equivalent to option name). Required.
+	 * @param array   $args {
+	 *    Optional and required arguments.
+	 *
+	 *    @type string      $tab_id        Tab ID. Required.
+	 *    @type string      $section       Section ID. Required.
+	 *    @type string|int  $default       The default value. Required, but may be an empty string.
+	 *    @type array       $option_values Optional. The allowed values.
+	 *    @type string|null $short         Optional. Short label. Default null.
+	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
+	 *    @type string|null $help_text     Optional. Help text. Default null.
+	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
+	 *    @type array       $attributes    Optional. Default [],
+	 * }
+	 *
+	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Control_Arguments $args
+	 */
+	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
+		$args = $this->prepare_args( $args, [ 'tab_id', 'section', 'default' ] );
+
 		$this->options           = $options;
 		$this->options_key       = $options_key;
 		$this->id                = $id;
-		$this->tab_id            = $tab_id;
-		$this->section           = $section;
-		$this->short             = $short ?? '';
-		$this->label             = $label;
-		$this->help_text         = $help_text;
-		$this->inline_help       = $inline_help;
-		$this->default           = $default_value;
-		$this->attributes        = $attributes;
-		$this->outer_attributes  = $outer_attributes;
-		$this->settings_args     = $settings_args;
-		$this->sanitize_callback = $sanitize_callback;
+		$this->tab_id            = $args['tab_id'];
+		$this->section           = $args['section'];
+		$this->short             = $args['short'] ?? '';
+		$this->label             = $args['label'];
+		$this->help_text         = $args['help_text'];
+		$this->inline_help       = $args['inline_help'];
+		$this->default           = $args['default'];
+		$this->attributes        = $args['attributes'];
+		$this->outer_attributes  = $args['outer_attributes'];
+		$this->settings_args     = $args['settings_args'];
+		$this->sanitize_callback = $args['sanitize_callback'];
 		$this->base_path         = \dirname( \dirname( __DIR__ ) );
 	}
 
@@ -316,6 +330,7 @@ abstract class Abstract_Control implements Control {
 			'label'             => null,
 			'help_text'         => null,
 			'inline_help'       => false,
+			'default'           => '',
 			'attributes'        => [],
 			'outer_attributes'  => [],
 			'settings_args'     => [],

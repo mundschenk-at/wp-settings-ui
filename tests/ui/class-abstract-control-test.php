@@ -42,6 +42,7 @@ use Mockery as m;
  * @usesDefaultClass \Mundschenk\UI\Abstract_Control
  *
  * @uses ::__construct
+ * @uses ::prepare_args
  */
 class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 
@@ -87,7 +88,26 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		$this->invokeMethod( $this->control, '__construct', [ $this->options, 'options_key', 'id', 'tab_id', 'section', 'default', 'short', 'label', 'help_text', true, [], [], [ 'my' => 'settings_arg' ] ], Abstract_Control::class );
+		$args = [
+			'tab_id'           => 'tab_id',
+			'section'          => 'section',
+			'default'          => 'default_value',
+			'short'            => 'short',
+			'label'            => 'label',
+			'help_text'        => 'help_text',
+			'inline_help'      => true,
+			'attributes'       => [],
+			'outer_attributes' => [],
+			'settings_args'    => [ 'my' => 'settings_arg' ],
+		];
+
+		Functions\when( 'wp_parse_args' )->alias(
+			static function ( $array1, $array2 ) {
+				return \array_merge( $array2, $array1 );
+			}
+		);
+
+		$this->invokeMethod( $this->control, '__construct', [ $this->options, 'options_key', 'id', $args ], Abstract_Control::class );
 	}
 
 	/**
@@ -102,29 +122,31 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$params = [
 			$this->options,
-			'options_key',
-			'id',
-			'tab_id',
-			'section',
-			'default',
-			'short',
-			'label',
-			'help_text',
-			true,
-			[ 'foo' => 'bar' ],
-			[ 'bar' => 'foo' ],
-			[ 'test' => 'value' ],
+			'my_options_key',
+			'my_id',
+			[
+				'tab_id'           => 'my_tab_id',
+				'section'          => 'my_section',
+				'default'          => 'my_default_value',
+				'short'            => 'my_short',
+				'label'            => 'my_label',
+				'help_text'        => 'my_help_text',
+				'inline_help'      => true,
+				'attributes'       => [ 'foo' => 'bar' ],
+				'outer_attributes' => [ 'bar' => 'foo' ],
+				'settings_args'    => [ 'test' => 'value' ],
+			],
 		];
 
 		$this->invokeMethod( $control, '__construct', $params, Abstract_Control::class );
 
-		$this->assert_attribute_same( 'id', 'id', $control );
-		$this->assert_attribute_same( 'tab_id', 'tab_id', $control );
-		$this->assert_attribute_same( 'section', 'section', $control );
-		$this->assert_attribute_same( 'default', 'default', $control );
-		$this->assert_attribute_same( 'short', 'short', $control );
-		$this->assert_attribute_same( 'label', 'label', $control );
-		$this->assert_attribute_same( 'help_text', 'help_text', $control );
+		$this->assert_attribute_same( 'my_id', 'id', $control );
+		$this->assert_attribute_same( 'my_tab_id', 'tab_id', $control );
+		$this->assert_attribute_same( 'my_section', 'section', $control );
+		$this->assert_attribute_same( 'my_default_value', 'default', $control );
+		$this->assert_attribute_same( 'my_short', 'short', $control );
+		$this->assert_attribute_same( 'my_label', 'label', $control );
+		$this->assert_attribute_same( 'my_help_text', 'help_text', $control );
 		$this->assert_attribute_same( true, 'inline_help', $control );
 		$this->assert_attribute_same( [ 'foo' => 'bar' ], 'attributes', $control );
 		$this->assert_attribute_same( [ 'bar' => 'foo' ], 'outer_attributes', $control );
@@ -151,16 +173,11 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			'help_text'         => null,
 			'inline_help'       => false,
 			'attributes'        => [],
+			'default'           => '',
 			'outer_attributes'  => [],
 			'settings_args'     => [],
 			'sanitize_callback' => null,
 		];
-
-		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
-			static function ( $array1, $array2 ) {
-				return \array_merge( $array2, $array1 );
-			}
-		);
 
 		$result = $this->invokeMethod( $this->control, 'prepare_args', [ $input, [] ] );
 		\ksort( $expected );
@@ -237,7 +254,7 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @covers ::get_default
 	 */
 	public function test_get_default(): void {
-		$this->assertSame( 'default', $this->control->get_default() );
+		$this->assertSame( 'default_value', $this->control->get_default() );
 	}
 
 	/**

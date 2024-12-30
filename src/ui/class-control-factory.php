@@ -55,17 +55,16 @@ abstract class Control_Factory {
 	 *         @type Control $id A control object.
 	 * }
 	 *
-	 * @phpstan-param array<string,mixed> $defaults
-	 *
-	 * @phpstan-return array<string,Control>
+	 * @phpstan-param array<string, array{ ui:class-string<Control>, grouped_with?: string }> $defaults
+	 * @phpstan-return array<string, Control>
 	 */
 	public static function initialize( array $defaults, Options $options, string $options_key ): array {
-
 		// Create controls from default configuration.
 		$controls = [];
 		$groups   = [];
+
 		foreach ( $defaults as $control_id => $control_info ) {
-			$controls[ $control_id ] = $control_info['ui']::create( $options, $options_key, $control_id, $control_info );
+			$controls[ $control_id ] = new $control_info['ui']( $options, $options_key, $control_id, $control_info );
 
 			if ( ! empty( $control_info['grouped_with'] ) ) {
 				$groups[ $control_info['grouped_with'] ][] = $control_id;

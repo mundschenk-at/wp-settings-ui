@@ -33,8 +33,6 @@ use Mundschenk\Data_Storage\Options;
 /**
  * HTML <input> element.
  *
- * @phpstan-consistent-constructor
- *
  * @phpstan-type Input_Arguments array{
  *     input_type: string,
  *     tab_id: string,
@@ -101,32 +99,20 @@ abstract class Input extends Abstract_Control {
 	 *
 	 * @phpstan-param Input_Arguments $args
 	 */
-	protected function __construct( Options $options, ?string $options_key, string $id, array $args ) {
+	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		/**
 		 * Fill in missing mandatory arguments.
 		 *
 		 * @phpstan-var Complete_Input_Arguments $args
 		 */
-		$args             = $this->prepare_args( $args, [ 'input_type', 'tab_id', 'default' ] );
-		$this->input_type = $args['input_type'];
-		$sanitize         = $args['sanitize_callback'] ?? 'sanitize_text_field';
+		$args = $this->prepare_args( $args, [ 'input_type', 'tab_id', 'default' ] );
 
-		parent::__construct(
-			$options,
-			$options_key,
-			$id,
-			$args['tab_id'],
-			$args['section'],
-			$args['default'],
-			$args['short'],
-			$args['label'],
-			$args['help_text'],
-			$args['inline_help'],
-			$args['attributes'],
-			$args['outer_attributes'],
-			$args['settings_args'],
-			$sanitize
-		);
+		// Handle input type.
+		$this->input_type = $args['input_type'];
+
+		$args['sanitize_callback'] = $args['sanitize_callback'] ?? 'sanitize_text_field';
+
+		parent::__construct( $options, $options_key, $id, $args );
 	}
 
 	/**
@@ -147,36 +133,5 @@ abstract class Input extends Abstract_Control {
 	 */
 	protected function get_element_markup(): string {
 		return '<input type="' . \esc_attr( $this->input_type ) . '" ' . "{$this->get_id_and_class_markup()} {$this->get_value_markup( $this->get_value() )}/>";
-	}
-
-	/**
-	 * Creates a new input control, provided the concrete subclass constructors follow
-	 * this methods signature.
-	 *
-	 * @param Options $options      Options API handler.
-	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
-	 * @param string  $id           Control ID (equivalent to option name). Required.
-	 * @param array   $args {
-	 *    Optional and required arguments.
-	 *
-	 *    @type string      $tab_id        Tab ID. Required.
-	 *    @type string      $section       Section ID. Required.
-	 *    @type string|int  $default       The default value. Required, but may be an empty string.
-	 *    @type array       $option_values The allowed values. Required.
-	 *    @type string|null $short         Optional. Short label. Default null.
-	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text     Optional. Help text. Default null.
-	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
-	 *    @type array       $attributes    Optional. Default [],
-	 * }
-	 *
-	 * @return static
-	 *
-	 * @throws \InvalidArgumentException Missing argument.
-	 *
-	 * @phpstan-param Input_Arguments $args
-	 */
-	public static function create( Options $options, ?string $options_key, string $id, array $args ) {
-		return new static( $options, $options_key, $id, $args );
 	}
 }

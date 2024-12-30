@@ -80,9 +80,9 @@ class Control_Factory_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		// Fake instances.
-		$number_input->shouldReceive( 'create' )->once()->andReturn( $number_input );
-		$checkbox->shouldReceive( 'create' )->once()->andReturn( $checkbox );
-		$select->shouldReceive( 'create' )->once()->andReturn( $select );
+		$number_input->shouldReceive( '__construct' )->once()->andReturn( $number_input );
+		$checkbox->shouldReceive( '__construct' )->once()->andReturn( $checkbox );
+		$select->shouldReceive( '__construct' )->once()->andReturn( $select );
 
 		// Set up expectations.
 		$checkbox->shouldReceive( 'add_grouped_control' )->once()->with( m::type( \Mundschenk\UI\Controls\Select::class ) );

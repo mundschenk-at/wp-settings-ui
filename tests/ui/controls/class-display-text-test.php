@@ -152,20 +152,4 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	public function test_get_value(): void {
 		$this->assertSame( '', $this->display_text->get_value() );
 	}
-
-	/**
-	 * Tests create.
-	 *
-	 * @covers ::create
-	 *
-	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
-	 */
-	public function test_create(): void {
-		$args = [
-			'tab_id'        => 'foo',
-			'elements'      => [],
-		];
-
-		$this->assertInstanceOf( Display_Text::class, Display_Text::create( $this->options, 'my_options', 'my_control_id', $args ) );
-	}
 }

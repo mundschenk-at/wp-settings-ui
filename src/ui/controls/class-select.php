@@ -104,26 +104,11 @@ class Select extends Abstract_Control {
 		 *
 		 * @phpstan-var Complete_Select_Arguments $args
 		 */
-		$args                = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
-		$sanitize            = $args['sanitize_callback'] ?? 'sanitize_text_field';
-		$this->option_values = $args['option_values'];
+		$args                      = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
+		$args['sanitize_callback'] = $args['sanitize_callback'] ?? 'sanitize_text_field';
+		$this->option_values       = $args['option_values'];
 
-		parent::__construct(
-			$options,
-			$options_key,
-			$id,
-			$args['tab_id'],
-			$args['section'],
-			$args['default'],
-			$args['short'],
-			$args['label'],
-			$args['help_text'],
-			$args['inline_help'],
-			$args['attributes'],
-			$args['outer_attributes'],
-			$args['settings_args'],
-			$sanitize
-		);
+		parent::__construct( $options, $options_key, $id, $args );
 	}
 
 	/**
@@ -178,35 +163,5 @@ class Select extends Abstract_Control {
 	 */
 	public function sanitize_value( $value ): string {
 		return \sanitize_text_field( $value );
-	}
-
-	/**
-	 * Creates a new select control
-	 *
-	 * @param Options $options      Options API handler.
-	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
-	 * @param string  $id           Control ID (equivalent to option name). Required.
-	 * @param array   $args {
-	 *    Optional and required arguments.
-	 *
-	 *    @type string      $tab_id        Tab ID. Required.
-	 *    @type string      $section       Section ID. Required.
-	 *    @type string|int  $default       The default value. Required, but may be an empty string.
-	 *    @type string[]    $option_values The allowed values. Required.
-	 *    @type string|null $short         Optional. Short label. Default null.
-	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text     Optional. Help text. Default null.
-	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
-	 *    @type array       $attributes    Optional. Default [],
-	 * }
-	 *
-	 * @return static
-	 *
-	 * @throws \InvalidArgumentException Missing argument.
-	 *
-	 * @phpstan-param Select_Arguments $args
-	 */
-	public static function create( Options $options, ?string $options_key, string $id, array $args ) {
-		return new static( $options, $options_key, $id, $args );
 	}
 }

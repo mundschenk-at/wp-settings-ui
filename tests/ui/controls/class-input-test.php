@@ -41,6 +41,7 @@ use Mockery as m;
  *
  * @uses ::__construct
  * @uses \Mundschenk\UI\Abstract_Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::prepare_args
  */
 class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
@@ -90,6 +91,11 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'default' ] )->andReturn( $args );
+		Functions\when( 'wp_parse_args' )->alias(
+			static function ( $array1, $array2 ) {
+				return \array_merge( $array2, $array1 );
+			}
+		);
 
 		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'id', $args ] );
 	}
@@ -152,28 +158,5 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->input->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'ID_AND_CLASS' );
 
 		$this->assertSame( '<input type="escaped_input_type" ID_AND_CLASS VALUE/>', $this->invokeMethod( $this->input, 'get_element_markup' ) );
-	}
-
-	/**
-	 * Tests create.
-	 *
-	 * @covers ::create
-	 *
-	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
-	 */
-	public function test_create(): void {
-		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
-			static function ( $array1, $array2 ) {
-				return \array_merge( $array2, $array1 );
-			}
-		);
-
-		$args = [
-			'input_type' => 'dummy',
-			'tab_id'     => 'foo',
-			'default'    => 'bar',
-		];
-
-		$this->assertInstanceOf( Input::class, Dummy_Input::create( $this->options, 'my_options', 'my_control_id', $args ) );
 	}
 }

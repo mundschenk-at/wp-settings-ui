@@ -119,34 +119,24 @@ class Display_Text extends Abstract_Control {
 	 *
 	 * @phpstan-param Display_Text_Arguments $args
 	 */
-	protected function __construct( Options $options, ?string $options_key, string $id, array $args ) {
+	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		/**
 		 * Fill in missing mandatory arguments.
 		 *
 		 * @phpstan-var Complete_Display_Text_Arguments $args
 		 */
-		$args           = $this->prepare_args( $args, [ 'elements' ] );
+		$args = $this->prepare_args( $args, [ 'elements' ] );
+
+		// Handle extra elements.
 		$this->elements = $args['elements'];
-		$sanitize       = static function () {
+
+		$args['default']           = '';
+		$args['label']             = null;
+		$args['sanitize_callback'] = static function () {
 			return '';
 		};
 
-		parent::__construct(
-			$options,
-			$options_key,
-			$id,
-			$args['tab_id'],
-			$args['section'],
-			'',
-			$args['short'],
-			null,
-			$args['help_text'],
-			$args['inline_help'],
-			$args['attributes'],
-			$args['outer_attributes'],
-			$args['settings_args'],
-			$sanitize
-		);
+		parent::__construct( $options, $options_key, $id, $args );
 	}
 
 	/**
@@ -165,35 +155,5 @@ class Display_Text extends Abstract_Control {
 	 */
 	protected function get_element_markup(): string {
 		return \wp_kses( \implode( '', $this->elements ), self::ALLOWED_HTML );
-	}
-
-	/**
-	 * Creates a new input control, provided the concrete subclass constructors follow
-	 * this methods signature.
-	 *
-	 * @param Options $options      Options API handler.
-	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
-	 * @param string  $id           Control ID (equivalent to option name). Required.
-	 * @param array   $args {
-	 *    Optional and required arguments.
-	 *
-	 *    @type string      $tab_id        Tab ID. Required.
-	 *    @type string      $section       Section ID. Required.
-	 *    @type string|int  $default       The default value. Required, but may be an empty string.
-	 *    @type string|null $short         Optional. Short label. Default null.
-	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text     Optional. Help text. Default null.
-	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
-	 *    @type array       $attributes    Optional. Default [],
-	 * }
-	 *
-	 * @return static
-	 *
-	 * @throws \InvalidArgumentException Missing argument.
-	 *
-	 * @phpstan-param Display_Text_Arguments $args
-	 */
-	public static function create( Options $options, ?string $options_key, string $id, array $args ) {
-		return new static( $options, $options_key, $id, $args );
 	}
 }

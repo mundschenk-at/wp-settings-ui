@@ -92,7 +92,11 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		$this->select->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'tab_id', 'default', 'option_values' ] )->andReturn( $args );
-
+		Functions\when( 'wp_parse_args' )->alias(
+			static function ( $array1, $array2 ) {
+				return \array_merge( $array2, $array1 );
+			}
+		);
 		Functions\when( 'my_sanitize_function' )->returnArg();
 
 		$this->invokeMethod( $this->select, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Select::class );
@@ -199,27 +203,5 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->select->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'ID_AND_CLASS' );
 
 		$this->assertMatchesRegularExpression( "#<select ID_AND_CLASS>(<option value=\"VALUE\" SELECTED>DISPLAY</option>){{$option_count}}</select>#", $this->invokeMethod( $this->select, 'get_element_markup' ) );
-	}
-
-	/**
-	 * Tests create.
-	 *
-	 * @covers ::create
-	 *
-	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
-	 */
-	public function test_create(): void {
-		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
-			static function ( $array1, $array2 ) {
-				return \array_merge( $array2, $array1 );
-			}
-		);
-
-		$args = [
-			'tab_id'        => 'foo',
-			'default'       => 'bar',
-			'option_values' => [ '1', '2' ],
-		];
-		$this->assertInstanceOf( Select::class, Select::create( $this->options, 'my_options', 'my_control_id', $args ) );
 	}
 }
