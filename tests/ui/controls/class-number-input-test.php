@@ -68,7 +68,11 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	protected function set_up() {
 		parent::set_up();
 
-		Functions\when( 'wp_parse_args' )->alias( 'array_merge' );
+		Functions\when( 'wp_parse_args' )->alias(
+			function ( array $args, array $defaults ): array {
+				return \array_merge( $defaults, $args );
+			}
+		);
 
 		// Mock Mundschenk\Data_Storage\Options instance.
 		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
@@ -131,5 +135,36 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		Functions\expect( 'esc_attr' )->once()->with( 0 )->andReturn( 0 );
 
 		$this->assertSame( 'value="0" ', $this->invokeMethod( $this->input, 'get_value_markup', [ 0 ] ) );
+	}
+
+	/**
+	 * Provides data for testing the sanitize_callback.
+	 *
+	 * @return array<int|string, array{ 0:mixed, 1: int|float }>
+	 */
+	public function provide_sanitize_callback_data(): array {
+		return [
+			'int'                => [ 55, 55 ],
+			'float'              => [ 44.4, 44.4 ],
+			'int string'         => [ '55', 55 ],
+			'float string'       => [ '55.55', 55.55 ],
+			'partial int string' => [ '110ff', 110 ],
+			'non-numeric string' => [ 'foo', 0 ],
+			'empty string'       => [ '', 0 ],
+		];
+	}
+
+	/**
+	 * Tests the internal sanitize_callback.
+	 *
+	 * @dataProvider provide_sanitize_callback_data
+	 *
+	 * @uses ::sanitize
+	 *
+	 * @param  mixed     $value  The input value.
+	 * @param  int|float $result The expected result.
+	 */
+	public function test_sanitize_callback( $value, $result ): void {
+		$this->assertSame( $result, $this->input->sanitize( $value ) );
 	}
 }

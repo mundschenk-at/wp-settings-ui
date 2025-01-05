@@ -62,7 +62,9 @@ class Number_Input extends Input {
 	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args['input_type']        = 'number';
 		$args['sanitize_callback'] = static function ( $value ) {
-			return $value + 0;
+			$result = \filter_var( $value, \FILTER_SANITIZE_NUMBER_FLOAT, \FILTER_FLAG_ALLOW_FRACTION );
+
+			return \is_numeric( $result ) ? $result + 0 : 0;
 		};
 
 		parent::__construct( $options, $options_key, $id, $args );
