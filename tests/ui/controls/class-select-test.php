@@ -204,4 +204,22 @@ class Select_Test extends \Mundschenk\UI\Tests\TestCase {
 
 		$this->assertMatchesRegularExpression( "#<select ID_AND_CLASS>(<option value=\"VALUE\" SELECTED>DISPLAY</option>){{$option_count}}</select>#", $this->invokeMethod( $this->select, 'get_element_markup' ) );
 	}
+
+
+	/**
+	 * Test sanitize_value.
+	 *
+	 * @covers ::sanitize_value
+	 */
+	public function test_sanitize_value(): void {
+		// Input data.
+		$value = 666;
+
+		// Expected result.
+		$result = 'sanitized 666';
+
+		Functions\expect( 'sanitize_text_field' )->once()->with( $value )->andReturn( $result );
+
+		$this->assertSame( $result, $this->select->sanitize_value( $value ) );
+	}
 }

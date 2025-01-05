@@ -186,14 +186,33 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->assertSame( $expected, $result );
 	}
 
+
+	/**
+	 * Test prepare_args.
+	 *
+	 * @covers ::prepare_args
+	 */
+	public function test_prepare_args_missing_required_argument(): void {
+		$input = [
+			'foo'    => 'bar',
+		];
+
+		Functions\expect( 'esc_html' )->once()->with( "Missing argument 'tab_id'." )->andReturnFirstArg();
+		$this->expectException( \InvalidArgumentException::class );
+
+		$this->invokeMethod( $this->control, 'prepare_args', [ $input, [] ] );
+	}
+
+
 	/**
 	 * Test get_value.
 	 *
 	 * @covers ::get_value
 	 */
 	public function test_get_value(): void {
-		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn( [ 'foo' => 'bar' ] );
 		$this->setValue( $this->control, 'id', 'foo' );
+
+		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn( [ 'foo' => 'bar' ] );
 
 		$this->assertSame( 'bar', $this->control->get_value() );
 	}
@@ -213,6 +232,19 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	}
 
 	/**
+	 * Test get_value that does not exist in option.
+	 *
+	 * @covers ::get_value
+	 */
+	public function test_get_value_invalid(): void {
+		$this->setValue( $this->control, 'id', 'baz' );
+
+		$this->options->shouldReceive( 'get' )->once()->with( 'options_key' )->andReturn( [ 'foo' => 'bar' ] );
+
+		$this->assertNull( $this->control->get_value() );
+	}
+
+	/**
 	 * Test render_element.
 	 *
 	 * @covers ::render_element
@@ -225,19 +257,28 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	}
 
 	/**
-	 * Test get_inner_html_attributes.
+	 * Test render.
 	 *
-	 * @covers ::get_html_attributes
-	 * @covers ::get_html_attributes
-	 *
-	 * @uses ::get_inner_html_attributes
+	 * @covers ::render
 	 */
-	public function test_get_inner_html_attributes(): void {
+	public function test_render(): void {
+		$this->setValue( $this->control, 'base_path', 'plugin' );
+
+		$this->expectOutputString( 'CONTROL' );
+
+		$this->control->render();
+	}
+
+	/**
+	 * Test get_html_attributes.
+	 *
+	 * @covers ::get_html_attributes
+	 */
+	public function test_get_html_attributes(): void {
 		$attributes = [
 			'foo' => 'bar',
 			'rel' => 'self',
 		];
-		$this->setValue( $this->control, 'attributes', $attributes );
 
 		Functions\expect( 'esc_attr' )->times( count( $attributes ) * 2 )->andReturnUsing(
 			static function ( $input ) {
@@ -245,7 +286,50 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 			}
 		);
 
+		$this->assertSame( 'foo="bar" rel="self" ', $this->invokeMethod( $this->control, 'get_html_attributes', [ $attributes ] ) );
+	}
+
+	/**
+	 * Test get_inner_html_attributes.
+	 *
+	 * @covers ::get_inner_html_attributes
+	 */
+	public function test_get_inner_html_attributes(): void {
+		// Input data.
+		$attributes = [
+			'foo' => 'bar',
+			'rel' => 'self',
+		];
+		$this->setValue( $this->control, 'attributes', $attributes );
+
+		// Expected result.
+		$result = 'foo="bar" rel="self" ';
+
+		$this->control->shouldReceive( 'get_html_attributes' )->once()->with( $attributes )->andReturn( $result );
+
 		$this->assertSame( 'foo="bar" rel="self" ', $this->invokeMethod( $this->control, 'get_inner_html_attributes' ) );
+	}
+
+	/**
+	 * Test get_outer_html_attributes.
+	 *
+	 * @covers ::get_outer_html_attributes
+	 * @covers ::get_html_attributes
+	 */
+	public function test_get_outer_html_attributes(): void {
+		// Input data.
+		$attributes = [
+			'foo' => 'bar',
+			'rel' => 'self',
+		];
+		$this->setValue( $this->control, 'outer_attributes', $attributes );
+
+		// Expected result.
+		$result = 'foo="bar" rel="self" ';
+
+		$this->control->shouldReceive( 'get_html_attributes' )->once()->with( $attributes )->andReturn( $result );
+
+		$this->assertSame( 'foo="bar" rel="self" ', $this->invokeMethod( $this->control, 'get_outer_html_attributes' ) );
 	}
 
 	/**
@@ -397,15 +481,66 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	}
 
 	/**
-	 * Test render.
+	 * Test group_with.
 	 *
-	 * @covers ::render
+	 * @covers ::group_with
 	 */
-	public function test_render(): void {
-		$this->setValue( $this->control, 'base_path', 'plugin' );
+	public function test_group_with(): void {
+		/**
+		 * Control mock.
+		 *
+		 * @var Abstract_Control&m\MockInterface $new_control
+		 */
+		$new_control = m::mock( Abstract_Control::class );
 
-		$this->expectOutputString( 'CONTROL' );
+		$this->control->group_with( $new_control );
 
-		$this->control->render();
+		$this->assert_attribute_same( $new_control, 'grouped_with', $this->control );
+	}
+
+	/**
+	 * Test group_with.
+	 *
+	 * @covers ::group_with
+	 */
+	public function test_group_with_failure(): void {
+		$this->control->group_with( $this->control );
+
+		$this->assert_attribute_not_contains( $this->control, 'grouped_controls', $this->control );
+	}
+
+	/**
+	 * Test sanitize.
+	 *
+	 * @covers ::sanitize
+	 */
+	public function test_sanitize(): void {
+		// Input data.
+		$value = 666;
+
+		// State data.
+		$this->set_value( $this->control, 'sanitize_callback', 'my_sanitize' );
+
+		// Expected result.
+		$result = 'sanitized 666';
+
+		Functions\expect( 'my_sanitize' )->once()->with( $value )->andReturn( $result );
+
+		$this->assertSame( $result, $this->control->sanitize( $value ) );
+	}
+
+	/**
+	 * Test sanitize.
+	 *
+	 * @covers ::sanitize
+	 */
+	public function test_sanitize_invalid_callback(): void {
+		// Input data.
+		$value = 666;
+
+		// State data.
+		$this->set_value( $this->control, 'sanitize_callback', 'my_invalid_sanitize' );
+
+		$this->assertSame( $value, $this->control->sanitize( $value ) );
 	}
 }

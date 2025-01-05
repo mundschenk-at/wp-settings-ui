@@ -152,4 +152,13 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	public function test_get_value(): void {
 		$this->assertSame( '', $this->display_text->get_value() );
 	}
+
+	/**
+	 * Tests the internal sanitize_callback.
+	 *
+	 * @uses ::sanitize
+	 */
+	public function test_sanitize_callback(): void {
+		$this->assertSame( '', $this->display_text->sanitize( 'Some string' ) );
+	}
 }
