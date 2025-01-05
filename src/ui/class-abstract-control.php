@@ -472,7 +472,7 @@ abstract class Abstract_Control implements Control {
 	 * @return bool
 	 */
 	protected function label_has_placeholder(): bool {
-		return false !== strpos( $this->label, '%1$s' );
+		return false !== strpos( $this->label ?? '', '%1$s' );
 	}
 
 	/**
