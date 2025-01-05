@@ -231,7 +231,7 @@ abstract class Abstract_Control implements Control {
 	/**
 	 * Create a new UI control object.
 	 *
-	 * @since 2024.12 Parameter `$default` renamed to `$default_value`.
+	 * @since 2025.1 Parameter `$default` renamed to `$default_value`.
 	 *
 	 * @param Options    $options           Options API handler.
 	 * @param ?string    $options_key       Database key for the options array. Passing null means that the control ID is used instead.

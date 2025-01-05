@@ -123,7 +123,7 @@ interface Control {
 	/**
 	 * Registers this control as grouped with another one.
 	 *
-	 * @since 2024.12 Marked as internal.
+	 * @since 2025.1 Marked as internal.
 	 *
 	 * @param Control $control Any control.
 	 *
