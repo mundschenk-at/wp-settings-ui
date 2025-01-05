@@ -395,6 +395,16 @@ class Abstract_Control_Test extends \Mundschenk\UI\Tests\TestCase {
 	}
 
 	/**
+	 * Test label_has_placeholder.
+	 *
+	 * @covers ::label_has_placeholder
+	 */
+	public function test_label_has_placeholder_null(): void {
+		$this->setValue( $this->control, 'label', null );
+		$this->assertFalse( $this->invokeMethod( $this->control, 'label_has_placeholder' ) );
+	}
+
+	/**
 	 * Test has_inline_help.
 	 *
 	 * @covers ::has_inline_help
