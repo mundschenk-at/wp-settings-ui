@@ -123,7 +123,11 @@ interface Control {
 	/**
 	 * Registers this control as grouped with another one.
 	 *
+	 * @since 2024.12 Marked as internal.
+	 *
 	 * @param Control $control Any control.
+	 *
+	 * @internal
 	 */
 	public function group_with( Control $control ): void;
 
