@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2018 Peter Putzer.
+ *  Copyright 2018-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -30,79 +30,26 @@ use Mundschenk\Data_Storage\Options;
 
 /**
  * An interface for HTML controls.
+ *
+ * @phpstan-type Control_Arguments array{
+ *     tab_id: string,
+ *     section: string,
+ *     default: string|int,
+ *     option_values?: string[],
+ *     short?: ?string,
+ *     label?: ?string,
+ *     help_text?: ?string,
+ *     inline_help?: bool,
+ *     attributes?: array<string,string>
+ * }
  */
 interface Control {
-
-	/**
-	 * Retrieve the current value for the control.
-	 * May be overridden by subclasses.
-	 *
-	 * @return mixed
-	 */
-	public function get_value();
-
-	/**
-	 * Render the HTML representation of the control.
-	 */
-	public function render();
-
-	/**
-	 * Retrieve default value.
-	 *
-	 * @return string|int
-	 */
-	public function get_default();
-
-	/**
-	 * Retrieve control ID.
-	 *
-	 * @return string
-	 */
-	public function get_id();
-
-	/**
-	 * Retrieves the label. If the label text contains a string placeholder, it
-	 * is replaced by the control element markup.
-	 *
-	 * @var string
-	 */
-	public function get_label();
-
-	/**
-	 * Register the control with the settings API.
-	 *
-	 * @param string $option_group Application-specific prefix.
-	 */
-	public function register( $option_group );
-
-	/**
-	 * Groups another control with this one.
-	 *
-	 * @param Control $control Any control.
-	 */
-	public function add_grouped_control( Control $control );
-
-	/**
-	 * Registers this control as grouped with another one.
-	 *
-	 * @param Control $control Any control.
-	 */
-	public function group_with( Control $control );
-
-	/**
-	 * Sanitizes an option value.
-	 *
-	 * @param  mixed $value The unslashed post variable.
-	 *
-	 * @return mixed        The sanitized value.
-	 */
-	public function sanitize( $value );
 
 	/**
 	 * Creates a new control.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -118,9 +65,78 @@ interface Control {
 	 *    @type array       $attributes    Optional. Default [],
 	 * }
 	 *
-	 * @return Control
-	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Control_Arguments $args
 	 */
-	public static function create( Options $options, $options_key, $id, array $args );
+	public function __construct( Options $options, ?string $options_key, string $id, array $args );
+
+	/**
+	 * Retrieve the current value for the control.
+	 * May be overridden by subclasses.
+	 *
+	 * @return mixed
+	 */
+	public function get_value();
+
+	/**
+	 * Render the HTML representation of the control.
+	 */
+	public function render(): void;
+
+	/**
+	 * Retrieve default value.
+	 *
+	 * @return string|int
+	 */
+	public function get_default();
+
+	/**
+	 * Retrieve control ID.
+	 *
+	 * @return string
+	 */
+	public function get_id(): string;
+
+	/**
+	 * Retrieves the label. If the label text contains a string placeholder, it
+	 * is replaced by the control element markup.
+	 *
+	 * @return string
+	 */
+	public function get_label(): string;
+
+	/**
+	 * Register the control with the settings API.
+	 *
+	 * @param string $option_group Application-specific prefix.
+	 */
+	public function register( string $option_group ): void;
+
+	/**
+	 * Groups another control with this one.
+	 *
+	 * @param Control $control Any control.
+	 */
+	public function add_grouped_control( Control $control ): void;
+
+	/**
+	 * Registers this control as grouped with another one.
+	 *
+	 * @since 2025.1 Marked as internal.
+	 *
+	 * @param Control $control Any control.
+	 *
+	 * @internal
+	 */
+	public function group_with( Control $control ): void;
+
+	/**
+	 * Sanitizes an option value.
+	 *
+	 * @param  mixed $value The unslashed post variable.
+	 *
+	 * @return mixed        The sanitized value.
+	 */
+	public function sanitize( $value );
 }

@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -50,28 +50,28 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Checkbox_Input
+	 * @var Checkbox_Input&m\MockInterface
 	 */
-	protected $input;
+	protected Checkbox_Input $input;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		Functions\when( 'wp_parse_args' )->alias( 'array_merge' );
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -91,6 +91,8 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 			'attributes'  => [ 'foo' => 'bar' ],
 		];
 
+		Functions\when( 'sanitize_text_field' )->returnArg();
+
 		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'my_id', $args ], Checkbox_Input::class );
 	}
 
@@ -101,7 +103,7 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$input = m::mock( Checkbox_Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -127,7 +129,7 @@ class Checkbox_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value_markup
 	 */
-	public function test_get_value_markup() {
+	public function test_get_value_markup(): void {
 		Functions\expect( 'checked' )->once()->with( 'my_value', true, false )->andReturn( 'checked' );
 
 		$this->assertSame( 'value="1" checked', $this->invokeMethod( $this->input, 'get_value_markup', [ 'my_value' ] ) );

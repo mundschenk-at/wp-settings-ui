@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -25,7 +25,6 @@
 namespace Mundschenk\UI\Controls\Tests;
 
 use Mundschenk\UI\Controls\Display_Text;
-use Mundschenk\UI\Controls\Input;
 use Mundschenk\Data_Storage\Options;
 
 use Brain\Monkey\Actions;
@@ -49,32 +48,32 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Display_Text
+	 * @var Display_Text&m\MockInterface
 	 */
-	protected $display_text;
+	protected Display_Text $display_text;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		Functions\expect( 'wp_parse_args' )->atLeast()->once()->andReturnUsing(
-			function( $array1, $array2 ) {
+			static function ( $array1, $array2 ) {
 				return \array_merge( $array2, $array1 );
 			}
 		);
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -110,7 +109,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$display_text = m::mock( Display_Text::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -139,7 +138,7 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_element_markup
 	 */
-	public function test_get_element_markup() {
+	public function test_get_element_markup(): void {
 		Functions\expect( 'wp_kses' )->once()->with( '<foo>Foo</foo><bar/>', m::type( 'array' ) )->andReturn( 'escaped_value' );
 
 		$this->assertSame( 'escaped_value', $this->invokeMethod( $this->display_text, 'get_element_markup' ) );
@@ -150,23 +149,16 @@ class Display_Text_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value
 	 */
-	public function test_get_value() {
+	public function test_get_value(): void {
 		$this->assertSame( '', $this->display_text->get_value() );
 	}
 
 	/**
-	 * Tests create.
+	 * Tests the internal sanitize_callback.
 	 *
-	 * @covers ::create
-	 *
-	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
+	 * @uses ::sanitize
 	 */
-	public function test_create() {
-		$args = [
-			'tab_id'        => 'foo',
-			'elements'      => [],
-		];
-
-		$this->assertInstanceOf( Display_Text::class, Display_Text::create( $this->options, 'my_options', 'my_control_id', $args ) );
+	public function test_sanitize_callback(): void {
+		$this->assertSame( '', $this->display_text->sanitize( 'Some string' ) );
 	}
 }

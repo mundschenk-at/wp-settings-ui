@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -49,39 +49,45 @@ class Control_Factory_Test extends \Mundschenk\UI\Tests\TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_initialize() {
-		// Helper objects.
-		$options      = m::mock( Options::class );
-		$options_key  = 'my_options_key';
-		$number_input = m::mock( 'overload:' . \Mundschenk\UI\Number_Input::class );
-		$checkbox     = m::mock( 'overload:' . \Mundschenk\UI\Checkbox_Input::class );
-		$select       = m::mock( 'overload:' . \Mundschenk\UI\Select::class );
+	public function test_initialize(): void {
+		/**
+		 * Options mock.
+		 *
+		 * @var Options&m\MockInterface $options
+		 */
+		$options     = m::mock( Options::class );
+		$options_key = 'my_options_key';
+
+		// Class mocks.
+		$number_input = m::mock( 'overload:' . \Mundschenk\UI\Controls\Number_Input::class );
+		$checkbox     = m::mock( 'overload:' . \Mundschenk\UI\Controls\Checkbox_Input::class );
+		$select       = m::mock( 'overload:' . \Mundschenk\UI\Controls\Select::class );
 
 		$defaults = [
 			'foo'    => [
 				'tab_id' => 'my-tab',
-				'ui'     => \Mundschenk\UI\Number_Input::class,
+				'ui'     => \Mundschenk\UI\Controls\Number_Input::class,
 			],
 			'check1' => [
 				'tab_id' => 'my-tab',
-				'ui'     => \Mundschenk\UI\Checkbox_Input::class,
+				'ui'     => \Mundschenk\UI\Controls\Checkbox_Input::class,
 			],
 			'check2' => [
 				'tab_id'       => 'other-tab',
 				'grouped_with' => 'check1',
-				'ui'           => \Mundschenk\UI\Select::class,
+				'ui'           => \Mundschenk\UI\Controls\Select::class,
 			],
 		];
 
 		// Fake instances.
-		$number_input->shouldReceive( 'create' )->once()->andReturn( $number_input );
-		$checkbox->shouldReceive( 'create' )->once()->andReturn( $checkbox );
-		$select->shouldReceive( 'create' )->once()->andReturn( $select );
+		$number_input->shouldReceive( '__construct' )->once()->andReturn( $number_input );
+		$checkbox->shouldReceive( '__construct' )->once()->andReturn( $checkbox );
+		$select->shouldReceive( '__construct' )->once()->andReturn( $select );
 
 		// Set up expectations.
-		$checkbox->shouldReceive( 'add_grouped_control' )->once()->with( m::type( \Mundschenk\UI\Select::class ) );
+		$checkbox->shouldReceive( 'add_grouped_control' )->once()->with( m::type( \Mundschenk\UI\Controls\Select::class ) );
 
 		// Do it.
-		$this->assertInternalType( 'array', Control_Factory::initialize( $defaults, $options, $options_key ) );
+		$this->assertIsArray( Control_Factory::initialize( $defaults, $options, $options_key ) );
 	}
 }

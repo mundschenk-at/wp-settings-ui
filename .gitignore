@@ -10,6 +10,7 @@ build/
 
 # Tests
 tests/coverage
+.phpunit.result.cache
 
 # macOS
 .DS_Store

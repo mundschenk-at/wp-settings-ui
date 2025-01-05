@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -50,28 +50,32 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Number_Input
+	 * @var Number_Input&m\MockInterface
 	 */
-	protected $input;
+	protected Number_Input $input;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
-		Functions\when( 'wp_parse_args' )->alias( 'array_merge' );
+		Functions\when( 'wp_parse_args' )->alias(
+			function ( array $args, array $defaults ): array {
+				return \array_merge( $defaults, $args );
+			}
+		);
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -101,7 +105,7 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$input = m::mock( Number_Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -127,9 +131,40 @@ class Number_Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value_markup
 	 */
-	public function test_get_value_markup() {
+	public function test_get_value_markup(): void {
 		Functions\expect( 'esc_attr' )->once()->with( 0 )->andReturn( 0 );
 
 		$this->assertSame( 'value="0" ', $this->invokeMethod( $this->input, 'get_value_markup', [ 0 ] ) );
+	}
+
+	/**
+	 * Provides data for testing the sanitize_callback.
+	 *
+	 * @return array<int|string, array{ 0:mixed, 1: int|float }>
+	 */
+	public function provide_sanitize_callback_data(): array {
+		return [
+			'int'                => [ 55, 55 ],
+			'float'              => [ 44.4, 44.4 ],
+			'int string'         => [ '55', 55 ],
+			'float string'       => [ '55.55', 55.55 ],
+			'partial int string' => [ '110ff', 110 ],
+			'non-numeric string' => [ 'foo', 0 ],
+			'empty string'       => [ '', 0 ],
+		];
+	}
+
+	/**
+	 * Tests the internal sanitize_callback.
+	 *
+	 * @dataProvider provide_sanitize_callback_data
+	 *
+	 * @uses ::sanitize
+	 *
+	 * @param  mixed     $value  The input value.
+	 * @param  int|float $result The expected result.
+	 */
+	public function test_sanitize_callback( $value, $result ): void {
+		$this->assertSame( $result, $this->input->sanitize( $value ) );
 	}
 }

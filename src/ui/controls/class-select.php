@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,27 +26,57 @@
 
 namespace Mundschenk\UI\Controls;
 
-use Mundschenk\UI\Control;
 use Mundschenk\UI\Abstract_Control;
 
 use Mundschenk\Data_Storage\Options;
 
 /**
  * HTML <select> element.
+ *
+ * @phpstan-import-type Input_Arguments from Input
+ * @phpstan-type Select_Arguments array{
+ *     tab_id: string,
+ *     section?: string,
+ *     default: string|int,
+ *     option_values: string[],
+ *     short?: ?string,
+ *     label?: ?string,
+ *     help_text?: ?string,
+ *     inline_help?: bool,
+ *     attributes?: array<string,string>,
+ *     outer_attributes?: array<string,string>,
+ *     settings_args?: array<string,string>
+ * }
+ * @phpstan-type Complete_Select_Arguments array{
+ *     tab_id: string,
+ *     section?: string,
+ *     default: string|int,
+ *     option_values: string[],
+ *     tab_id: string,
+ *     section: string,
+ *     short: ?string,
+ *     label: ?string,
+ *     help_text: ?string,
+ *     inline_help: bool,
+ *     attributes: array<string,string>,
+ *     outer_attributes: array<string,string>,
+ *     settings_args: array<string,string>,
+ *     sanitize_callback: ?callable,
+ * }
  */
 class Select extends Abstract_Control {
 	/**
 	 * The selectable values.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
-	protected $option_values;
+	protected array $option_values;
 
 	/**
 	 * Create a new select control object.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -65,36 +95,28 @@ class Select extends Abstract_Control {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Select_Arguments $args
 	 */
-	public function __construct( Options $options, $options_key, $id, array $args ) {
-		$args                = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
-		$sanitize            = $args['sanitize_callback'] ?: 'sanitize_text_field';
-		$this->option_values = $args['option_values'];
+	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
+		/**
+		 * Fill in missing mandatory arguments.
+		 *
+		 * @phpstan-var Complete_Select_Arguments $args
+		 */
+		$args                      = $this->prepare_args( $args, [ 'tab_id', 'default', 'option_values' ] );
+		$args['sanitize_callback'] = $args['sanitize_callback'] ?? 'sanitize_text_field';
+		$this->option_values       = $args['option_values'];
 
-		parent::__construct(
-			$options,
-			$options_key,
-			$id,
-			$args['tab_id'],
-			$args['section'],
-			$args['default'],
-			$args['short'],
-			$args['label'],
-			$args['help_text'],
-			$args['inline_help'],
-			$args['attributes'],
-			$args['outer_attributes'],
-			$args['settings_args'],
-			$sanitize
-		);
+		parent::__construct( $options, $options_key, $id, $args );
 	}
 
 	/**
 	 * Set selectable options.
 	 *
-	 * @param array $option_values An array of VALUE => DISPLAY.
+	 * @param string[] $option_values An array of VALUE => DISPLAY.
 	 */
-	public function set_option_values( array $option_values ) {
+	public function set_option_values( array $option_values ): void {
 		$this->option_values = $option_values;
 	}
 
@@ -120,7 +142,7 @@ class Select extends Abstract_Control {
 	 *
 	 * @return string
 	 */
-	protected function get_element_markup() {
+	protected function get_element_markup(): string {
 		$select_markup = "<select {$this->get_id_and_class_markup()}>";
 		$value         = $this->get_value();
 
@@ -139,35 +161,7 @@ class Select extends Abstract_Control {
 	 *
 	 * @return string       The sanitized value.
 	 */
-	public function sanitize_value( $value ) {
+	public function sanitize_value( $value ): string {
 		return \sanitize_text_field( $value );
-	}
-
-	/**
-	 * Creates a new select control
-	 *
-	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
-	 * @param string  $id           Control ID (equivalent to option name). Required.
-	 * @param array   $args {
-	 *    Optional and required arguments.
-	 *
-	 *    @type string      $tab_id        Tab ID. Required.
-	 *    @type string      $section       Section ID. Required.
-	 *    @type string|int  $default       The default value. Required, but may be an empty string.
-	 *    @type array       $option_values The allowed values. Required.
-	 *    @type string|null $short         Optional. Short label. Default null.
-	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text     Optional. Help text. Default null.
-	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
-	 *    @type array       $attributes    Optional. Default [],
-	 * }
-	 *
-	 * @return Control
-	 *
-	 * @throws \InvalidArgumentException Missing argument.
-	 */
-	public static function create( Options $options, $options_key, $id, array $args ) {
-		return new static( $options, $options_key, $id, $args );
 	}
 }

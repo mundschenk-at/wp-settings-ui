@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -41,32 +41,33 @@ use Mockery as m;
  *
  * @uses ::__construct
  * @uses \Mundschenk\UI\Abstract_Control::__construct
+ * @uses \Mundschenk\UI\Abstract_Control::prepare_args
  */
 class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var Options
+	 * @var Options&m\MockInterface
 	 */
-	protected $options;
+	protected Options $options;
 
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\UI\Controls\Input
+	 * @var Input&m\MockInterface
 	 */
-	protected $input;
+	protected Input $input;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		// Mock Mundschenk\Data_Storage\Options instance.
-		$this->options = m::mock( Options::class )
+		$this->options = m::mock( Options::class ) // @phpstan-ignore method.notFound
 			->shouldReceive( 'get' )->andReturn( false )->byDefault()
 			->shouldReceive( 'set' )->andReturn( false )->byDefault()
 			->getMock();
@@ -90,6 +91,11 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		];
 
 		$this->input->shouldReceive( 'prepare_args' )->once()->with( $args, [ 'input_type', 'tab_id', 'default' ] )->andReturn( $args );
+		Functions\when( 'wp_parse_args' )->alias(
+			static function ( $array1, $array2 ) {
+				return \array_merge( $array2, $array1 );
+			}
+		);
 
 		$this->invokeMethod( $this->input, '__construct', [ $this->options, 'options_key', 'id', $args ] );
 	}
@@ -101,7 +107,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @uses \Mundschenk\UI\Controls\Input::__construct
 	 */
-	public function test_constructor() {
+	public function test_constructor(): void {
 		$input = m::mock( Input::class )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
@@ -132,7 +138,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_value_markup
 	 */
-	public function test_get_value_markup() {
+	public function test_get_value_markup(): void {
 		Functions\expect( 'esc_attr' )->once()->with( 'my_value' )->andReturn( 'my_escaped_value' );
 
 		$this->assertSame( 'value="my_escaped_value" ', $this->invokeMethod( $this->input, 'get_value_markup', [ 'my_value' ] ) );
@@ -144,7 +150,7 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 	 *
 	 * @covers ::get_element_markup
 	 */
-	public function test_get_element_markup() {
+	public function test_get_element_markup(): void {
 		Functions\expect( 'esc_attr' )->once()->with( 'my_input_type' )->andReturn( 'escaped_input_type' );
 
 		$this->input->shouldReceive( 'get_value' )->once()->andReturn( 'value' );
@@ -152,27 +158,5 @@ class Input_Test extends \Mundschenk\UI\Tests\TestCase {
 		$this->input->shouldReceive( 'get_id_and_class_markup' )->once()->andReturn( 'ID_AND_CLASS' );
 
 		$this->assertSame( '<input type="escaped_input_type" ID_AND_CLASS VALUE/>', $this->invokeMethod( $this->input, 'get_element_markup' ) );
-	}
-
-	/**
-	 * Tests create.
-	 *
-	 * @covers ::create
-	 *
-	 * @uses \Mundschenk\UI\Abstract_Control::prepare_args
-	 */
-	public function test_create() {
-		Functions\expect( 'wp_parse_args' )->twice()->andReturnUsing(
-			function( $array1, $array2 ) {
-				return \array_merge( $array2, $array1 );
-			}
-		);
-
-		$args = [
-			'tab_id'  => 'foo',
-			'default' => 'bar',
-		];
-
-		$this->assertInstanceOf( Input::class, Dummy_Input::create( $this->options, 'my_options', 'my_control_id', $args ) );
 	}
 }

@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2017-2018 Peter Putzer.
+ *  Copyright 2017-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,12 +26,12 @@
 
 namespace Mundschenk\UI\Controls;
 
-use Mundschenk\UI\Control;
-
 use Mundschenk\Data_Storage\Options;
 
 /**
- * HTML <input> element.
+ * HTML numeric <input> element.
+ *
+ * @phpstan-import-type Input_Arguments from Input
  */
 class Number_Input extends Input {
 
@@ -39,7 +39,7 @@ class Number_Input extends Input {
 	 * Create a new input control object.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -56,11 +56,15 @@ class Number_Input extends Input {
 	 * }
 	 *
 	 * @throws \InvalidArgumentException Missing argument.
+	 *
+	 * @phpstan-param Input_Arguments $args
 	 */
-	public function __construct( Options $options, $options_key, $id, array $args ) {
+	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
 		$args['input_type']        = 'number';
-		$args['sanitize_callback'] = function( $value ) {
-			return $value + 0;
+		$args['sanitize_callback'] = static function ( $value ) {
+			$result = \filter_var( $value, \FILTER_SANITIZE_NUMBER_FLOAT, \FILTER_FLAG_ALLOW_FRACTION );
+
+			return \is_numeric( $result ) ? $result + 0 : 0;
 		};
 
 		parent::__construct( $options, $options_key, $id, $args );
@@ -73,7 +77,7 @@ class Number_Input extends Input {
 	 *
 	 * @return string
 	 */
-	protected function get_value_markup( $value ) {
+	protected function get_value_markup( $value ): string {
 		// Include 0 values.
 		return 'value="' . \esc_attr( $value ) . '" ';
 	}

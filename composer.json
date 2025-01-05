@@ -13,18 +13,24 @@
     ],
 
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.4.0",
         "mundschenk-at/wp-data-storage": "^1.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "dev-master",
-        "wp-coding-standards/wpcs": "^2.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
-        "phpunit/phpunit": "5.*||6.*||7.*",
+        "squizlabs/php_codesniffer": "^3.4",
+        "wp-coding-standards/wpcs": "^3",
+        "phpcompatibility/php-compatibility": "^9.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpunit/phpunit": "9.*||10.*||11.*",
         "mikey179/vfsstream": "~1",
-        "brain/monkey": "^2.0@dev",
-        "roave/security-advisories": "dev-master"
+        "brain/monkey": "^2.2",
+        "roave/security-advisories": "dev-master",
+        "phpstan/phpstan": "^2",
+        "szepeviktor/phpstan-wordpress": "^2.0.0-rc.2",
+        "phpstan/extension-installer": "^1.2",
+        "phpstan/phpstan-phpunit": "^2",
+        "phpstan/phpstan-mockery": "^2.0",
+        "mundschenk-at/phpunit-cross-version": "dev-master"
     },
 
     "autoload": {
@@ -35,7 +41,11 @@
     },
 
     "config": {
-        "classmap-authoritative": false
+        "classmap-authoritative": false,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
     },
 
     "minimum-stability": "dev",
@@ -43,13 +53,16 @@
 
     "scripts": {
         "test": [
-          "vendor/bin/phpunit --testsuite WPSettingsUI"
+          "phpunit --testsuite WPSettingsUI"
         ],
         "coverage": [
-          "@composer test -- --coverage-html tests/coverage"
+          "XDEBUG_MODE=coverage phpunit --testsuite WPSettingsUI --coverage-html tests/coverage"
         ],
         "phpcs": [
-          "vendor/bin/phpcs -ps src/ tests/ --extensions=php"
+            "phpcs -ps src/ tests/ --extensions=php --runtime-set testVersion 7.4- --cache"
+        ],
+        "phpstan": [
+            "phpstan analyse --ansi"
         ]
     }
 }

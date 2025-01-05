@@ -2,7 +2,7 @@
 /**
  *  This file is part of WordPress Settings UI.
  *
- *  Copyright 2018 Peter Putzer.
+ *  Copyright 2018-2024 Peter Putzer.
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,13 +26,39 @@
 
 namespace Mundschenk\UI\Controls;
 
-use Mundschenk\UI\Control;
 use Mundschenk\UI\Abstract_Control;
 
 use Mundschenk\Data_Storage\Options;
 
 /**
  * A control displaying read-only text.
+ *
+ * @phpstan-type Display_Text_Arguments array{
+ *     tab_id: string,
+ *     section?: string,
+ *     short?: ?string,
+ *     label?: ?string,
+ *     help_text?: ?string,
+ *     inline_help?: bool,
+ *     attributes?: array<string,string>,
+ *     outer_attributes?: array<string,string>,
+ *     settings_args?: array<string,string>
+ * }
+ * @phpstan-type Complete_Display_Text_Arguments array{
+ *     tab_id: string,
+ *     section?: string,
+ *     tab_id: string,
+ *     section: string,
+ *     elements: string[],
+ *     short: ?string,
+ *     label: ?string,
+ *     help_text: ?string,
+ *     inline_help: bool,
+ *     attributes: array<string,string>,
+ *     outer_attributes: array<string,string>,
+ *     settings_args: array<string,string>,
+ *     sanitize_callback: ?callable,
+ * }
  */
 class Display_Text extends Abstract_Control {
 
@@ -75,7 +101,7 @@ class Display_Text extends Abstract_Control {
 	 * Create a new input control object.
 	 *
 	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
+	 * @param ?string $options_key  Database key for the options array. Passing null means that the control ID is used instead.
 	 * @param string  $id           Control ID (equivalent to option name). Required.
 	 * @param array   $args {
 	 *    Optional and required arguments.
@@ -90,30 +116,27 @@ class Display_Text extends Abstract_Control {
 	 *    @type array       $outer_attributes Optional. Default [],
 	 *    @type array       $settings_args    Optional. Default [],
 	 * }
+	 *
+	 * @phpstan-param Display_Text_Arguments $args
 	 */
-	protected function __construct( Options $options, $options_key, $id, array $args ) {
-		$args           = $this->prepare_args( $args, [ 'elements' ] );
+	public function __construct( Options $options, ?string $options_key, string $id, array $args ) {
+		/**
+		 * Fill in missing mandatory arguments.
+		 *
+		 * @phpstan-var Complete_Display_Text_Arguments $args
+		 */
+		$args = $this->prepare_args( $args, [ 'elements' ] );
+
+		// Handle extra elements.
 		$this->elements = $args['elements'];
-		$sanitize       = function() {
+
+		$args['default']           = '';
+		$args['label']             = null;
+		$args['sanitize_callback'] = static function () {
 			return '';
 		};
 
-		parent::__construct(
-			$options,
-			$options_key,
-			$id,
-			$args['tab_id'],
-			$args['section'],
-			'',
-			$args['short'],
-			null,
-			$args['help_text'],
-			$args['inline_help'],
-			$args['attributes'],
-			$args['outer_attributes'],
-			$args['settings_args'],
-			$sanitize
-		);
+		parent::__construct( $options, $options_key, $id, $args );
 	}
 
 	/**
@@ -121,45 +144,16 @@ class Display_Text extends Abstract_Control {
 	 *
 	 * @return string
 	 */
-	public function get_value() {
+	public function get_value(): string {
 		return '';
 	}
 
 	/**
 	 * Retrieves the control-specific HTML markup.
 	 *
-	 * @var string
+	 * @return string
 	 */
-	protected function get_element_markup() {
+	protected function get_element_markup(): string {
 		return \wp_kses( \implode( '', $this->elements ), self::ALLOWED_HTML );
-	}
-
-	/**
-	 * Creates a new input control, provided the concrete subclass constructors follow
-	 * this methods signature.
-	 *
-	 * @param Options $options      Options API handler.
-	 * @param string  $options_key  Database key for the options array. Passing '' means that the control ID is used instead.
-	 * @param string  $id           Control ID (equivalent to option name). Required.
-	 * @param array   $args {
-	 *    Optional and required arguments.
-	 *
-	 *    @type string      $tab_id        Tab ID. Required.
-	 *    @type string      $section       Section ID. Required.
-	 *    @type string|int  $default       The default value. Required, but may be an empty string.
-	 *    @type array       $option_values The allowed values. Required.
-	 *    @type string|null $short         Optional. Short label. Default null.
-	 *    @type string|null $label         Optional. Label content with the position of the control marked as %1$s. Default null.
-	 *    @type string|null $help_text     Optional. Help text. Default null.
-	 *    @type bool        $inline_help   Optional. Display help inline. Default false.
-	 *    @type array       $attributes    Optional. Default [],
-	 * }
-	 *
-	 * @return Control
-	 *
-	 * @throws \InvalidArgumentException Missing argument.
-	 */
-	public static function create( Options $options, $options_key, $id, array $args ) {
-		return new static( $options, $options_key, $id, $args );
 	}
 }
