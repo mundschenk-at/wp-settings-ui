@@ -92,7 +92,7 @@ jobs:
           sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' phpunit.test-report.xml
       - name: Extract version number
         run: |
-          echo "PROJECT_VERSION=$(date +%Y.%m)" >> $GITHUB_ENV
+          echo "PROJECT_VERSION=$(sed -n 's/^.*@version \(.*\)$/\1/p' tests/bootstrap.php)" >> $GITHUB_ENV
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@master
         with:
